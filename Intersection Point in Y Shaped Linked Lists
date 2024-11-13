@@ -1,0 +1,61 @@
+class Intersect {
+    // Function to find intersection point in Y shaped Linked Lists.
+   Intersection Point in Y Shaped Linked Lists
+Difficulty: MediumAccuracy: 44.67%Submissions: 289K+Points: 4
+Given two singly linked lists, return the point where two linked lists intersect.
+
+Note: If the linked lists do not merge at any point, return -1.
+
+Examples:
+
+Input: Linked list 1: 4->4->4->4->4, Linked list 2: 4->4->4
+ 
+Output: 4
+Explanation: From the above image, it is clearly seen that the common part is 4->4 whose starting point is 4.
+
+Input: Linked list 1: 4->1->8->4->5, Linked List 2: 5->6->1->8->4->5
+ 
+Output: 8
+Explanation: From the above image, it is clearly seen that the common part is 8->4->5 whose starting point is 8.
+Input: Linked list 1: 1->2->3, Linked list 2: 4->5->6
+Output: -1
+Explanation: There is no common part, so there is no interaction point.
+Try to solve the problem without using any extra space.
+
+Constraints:
+2 ≤ size of first linkedist + size of second linkedlist ≤ 2*105
+-10000 ≤ data of nodes ≤ 10000
+
+Company Tags
+VMWareFlipkartAccoliteAmazonMicrosoftSnapdealD-E-ShawFactSetMakeMyTripVisaGoldman SachsMAQ SoftwareAdobeQualcomm
+
+
+static int intersectPoint(Node head1, Node head2) {
+        int n1 = 0, n2 = 0;
+        Node temp = null;
+
+        // finding length of list1.
+        for (temp = head1; temp != null; temp = temp.next) n1 += 1;
+
+        // finding length of list2.
+        for (temp = head2; temp != null; temp = temp.next) n2 += 1;
+
+        // if list1 is longer, we ignore some of its starting
+        // elements till it has as many elements as list2.
+        for (; n1 > n2; n1 -= 1) head1 = head1.next;
+
+        // similarly, if list2 is longer, we ignore some of its starting
+        // elements till it has as many elements as list1.
+        for (; n2 > n1; n2 -= 1) head2 = head2.next;
+
+        // now we simply traverse ahead till we get the intersection point, if
+        // there is none, this loop will break when both pointers point at NULL.
+        while (head1 != head2) {
+            head1 = head1.next;
+            head2 = head2.next;
+        }
+        // if head1 is not NULL, we return its data otherwise we return -1.
+        if (head1 != null) return head1.data;
+        return -1;
+    }
+}
