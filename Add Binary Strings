@@ -1,0 +1,66 @@
+Add Binary Strings
+Difficulty: MediumAccuracy: 23.25%Submissions: 79K+Points: 4
+Given two binary strings s1 and s2 consisting of only 0s and 1s. Find the resultant string after adding the two Binary Strings.
+Note: The input strings may contain leading zeros but the output string should not have any leading zeros.
+
+Input: s1 = "1101", s2 = "111"
+Output: 10100
+Explanation:
+ 1101
++ 111
+10100
+Input: s1 = "00100", s2 = "010"
+Output: 110
+Explanation: 
+  100
++  10
+  110
+Constraints:
+1 ≤s1.size(), s2.size()≤ 10
+
+class Solution {
+    public String addBinary(String s1, String s2) {
+        int i = s1.length() - 1, j = s2.length() - 1;
+        if (i == -1) return s2;
+        if (j == -1) return s1;
+
+        StringBuilder res = new StringBuilder();
+        char ch1, ch2, carry = '0';
+        int temp;
+
+        while (i >= 0 || j >= 0) {
+            if (i >= 0)
+                ch1 = s1.charAt(i);
+            else
+                ch1 = '0';
+
+            if (j >= 0)
+                ch2 = s2.charAt(j);
+            else
+                ch2 = '0';
+
+            temp = (ch1 - '0') + (ch2 - '0') + (carry - '0');
+            if (temp == 0) {
+                res.append('0');
+                carry = '0';
+            } else if (temp == 1) {
+                res.append('1');
+                carry = '0';
+            } else if (temp == 2) {
+                res.append('0');
+                carry = '1';
+            } else {
+                res.append('1');
+                carry = '1';
+            }
+
+            i--;
+            j--;
+        }
+        if (carry == '1') res.append(carry);
+        int len = res.length();
+        while (len > 0 && res.charAt(len - 1) == '0') len--;
+        if (len == 0) return "0";
+        return res.reverse().toString();
+    }
+}
