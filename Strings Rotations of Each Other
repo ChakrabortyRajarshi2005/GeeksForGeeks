@@ -1,0 +1,59 @@
+Strings Rotations of Each Other
+Difficulty: EasyAccuracy: 43.83%Submissions: 214K+Points: 2
+You are given two strings of equal lengths, s1 and s2. The task is to check if s2 is a rotated version of the string s1.
+
+Note: The characters in the strings are in lowercase.
+
+Examples :
+
+Input: s1 = "abcd", s2 = "cdab"
+Output: true
+Explanation: After 2 right rotations, s1 will become equal to s2.
+Input: s1 = "aab", s2 = "aba"
+Output: true
+Explanation: After 1 left rotation, s1 will become equal to s2.
+Input: s1 = "abcd", s2 = "acbd"
+Output: false
+Explanation: Strings are not rotations of each other.
+Constraints:
+1 <= s1.size(), s2.size() <= 105
+class Solution {
+public boolean KMPSearch(String pat, String txt) {
+        int M = pat.length(), N = txt.length();
+        int[] lps = new int[M];
+        computeLPSArray(pat, lps);
+        int i = 0, j = 0;
+
+        while ((N - i) >= (M - j)) {
+            if (pat.charAt(j) == txt.charAt(i)) {
+                j++;
+                i++;
+            }
+            if (j == M) return true;
+            else if (i < N && pat.charAt(j) != txt.charAt(i)) {
+                if (j != 0) j = lps[j - 1];
+                else i++;
+            }
+        }
+        return false;
+    }
+
+    void computeLPSArray(String pat, int[] lps) {
+        int len = 0, i = 1;
+        lps[0] = 0;
+
+        while (i < pat.length()) {
+            if (pat.charAt(i) == pat.charAt(len)) {
+                lps[i++] = ++len;
+            } else if (len != 0) {
+                len = lps[len - 1];
+            } else {
+                lps[i++] = 0;
+            }
+        }
+    }
+
+    public boolean areRotations(String s1, String s2) {
+        return s1.length() == s2.length() && KMPSearch(s2, s1 + s1);
+    }
+}
