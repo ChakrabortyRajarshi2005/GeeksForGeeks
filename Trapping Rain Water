@@ -1,0 +1,47 @@
+Trapping Rain Water
+Difficulty: HardAccuracy: 33.14%Submissions: 441K+Points: 8
+Given an array arr[] with non-negative integers representing the height of blocks. If the width of each block is 1, compute how much water can be trapped between the blocks during the rainy season. 
+
+Examples:
+
+Input: arr[] = [3, 0, 0, 2, 0, 4]
+Output: 10
+Explanation: 
+
+Input: arr[] = [7, 4, 0, 9]
+Output: 10
+Explanation:
+Water trapped by above 
+block of height 4 is 3 units and above 
+block of height 0 is 7 units. So, the 
+total unit of water trapped is 10 units.
+Input: arr[] = [6, 9, 9]
+Output: 0
+Explanation:
+No water will be trapped.
+Constraints:
+3 < arr.size() < 104
+0 < arr[i] < 103
+class Solution {
+    public int trappingWater(int arr[]) {
+        int n = arr.length;
+        int left[] = new int[n];
+        int right[] = new int[n];
+
+        left[0] = arr[0];
+        for (int i = 1; i < n; i++) {
+            left[i] = Math.max(left[i - 1], arr[i]);
+        }
+
+        right[n - 1] = arr[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            right[i] = Math.max(right[i + 1], arr[i]);
+        }
+
+        int water = 0;
+        for (int i = 1; i < n - 1; i++) {
+            water += Math.max(0, Math.min(left[i], right[i]) - arr[i]);
+        }
+        return water;
+    }
+}
