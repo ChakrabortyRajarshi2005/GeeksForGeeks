@@ -1,0 +1,43 @@
+Longest substring with distinct characters
+Difficulty: EasyAccuracy: 31.32%Submissions: 154K+Points: 2
+Given a string s, find the length of the longest substring with all distinct characters. 
+
+Examples:
+
+Input: s = "geeksforgeeks"
+Output: 7
+Explanation: "eksforg" is the longest substring with all distinct characters.
+Input: s = "aaa"
+Output: 1
+Explanation: "a" is the longest substring with all distinct characters.
+Input: s = "abcdefabcbb"
+Output: 6
+Explanation: The longest substring with all distinct characters is "abcdef", which has a length of 6.
+Constraints:
+1<= s.size()<=3*104
+All the characters are in lowercase.
+
+
+class Solution {
+    static final int MAX_CHAR = 26;
+
+    public int longestUniqueSubstr(String s) {
+        if (s.length() == 0 || s.length() == 1) return s.length();
+
+        int res = 0;
+        boolean[] vis = new boolean[MAX_CHAR];
+
+        int left = 0, right = 0;
+        while (right < s.length()) {
+            while (vis[s.charAt(right) - 'a'] == true) {
+                vis[s.charAt(left) - 'a'] = false;
+                left++;
+            }
+
+            vis[s.charAt(right) - 'a'] = true;
+            res = Math.max(res, (right - left + 1));
+            right++;
+        }
+        return res;
+    }
+}
