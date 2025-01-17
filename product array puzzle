@@ -1,0 +1,65 @@
+Product array puzzle
+Difficulty: EasyAccuracy: 33.46%Submissions: 264K+Points: 2
+Given an array, arr[] construct a product array, res[] where each element in res[i] is the product of all elements in arr[] except arr[i]. Return this resultant array, res[].
+Note: Each element is res[] lies inside the 32-bit integer range.
+
+Examples:
+
+Input: arr[] = [10, 3, 5, 6, 2]
+Output: [180, 600, 360, 300, 900]
+Explanation: For i=0, res[i] = 3 * 5 * 6 * 2 is 180.
+For i = 1, res[i] = 10 * 5 * 6 * 2 is 600.
+For i = 2, res[i] = 10 * 3 * 6 * 2 is 360.
+For i = 3, res[i] = 10 * 3 * 5 * 2 is 300.
+For i = 4, res[i] = 10 * 3 * 5 * 6 is 900.
+Input: arr[] = [12, 0]
+Output: [0, 12]
+Explanation: For i = 0, res[i] is 0.
+For i = 1, res[i] is 12.
+Constraints:
+2 <= arr.size() <= 105
+-100 <= arr[i] <= 100
+
+
+class Solution {
+    public static int[] productExceptSelf(int arr[]) {
+        int n = arr.length;
+        int[] res = new int[n];
+
+        int product = 1;
+        int zeroCount = 0;
+
+        // Calculate product over all array elements and count zeros
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == 0) {
+                zeroCount++;
+            } else {
+                product *= arr[i];
+            }
+        }
+
+        // Case 1: If there are more than one zero, return an array of zeros
+        if (zeroCount > 1) {
+            return new int[n]; // All zeros
+        }
+
+        // Case 2: If there is exactly one zero, set the product at that index
+        if (zeroCount == 1) {
+            for (int i = 0; i < n; i++) {
+                if (arr[i] == 0) {
+                    res[i] = product;
+                } else {
+                    res[i] = 0;
+                }
+            }
+            return res;
+        }
+
+        // Case 3: If there are no zeros, calculate product except self
+        for (int i = 0; i < n; i++) {
+            res[i] = product / arr[i];
+        }
+
+        return res; // Return the resultant product array
+    }
+}
