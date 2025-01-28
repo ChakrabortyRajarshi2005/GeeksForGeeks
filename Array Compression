@@ -1,0 +1,475 @@
+Array Compression
+You are given an array 
+A
+A containing 
+N
+N positive integers.
+
+You can compress this array by performing the following operation:
+
+Choose any non-empty array 
+B
+B containing positive integers, such that there are at least two disjoint occurrences of 
+B
+B in 
+A
+A as a subarray
+†
+†
+ .
+Then, choose two or more mutually disjoint occurrences of 
+B
+B among the subarrays of 
+A
+A.
+Replace each such occurrence with the single integer 
+−
+1
+−1.
+For example, suppose 
+A
+=
+[
+1
+,
+2
+,
+1
+,
+2
+,
+1
+,
+2
+,
+1
+,
+3
+,
+1
+,
+2
+,
+1
+]
+A=[1,2,1,2,1,2,1,3,1,2,1]. Then,
+
+If you choose 
+B
+=
+[
+1
+,
+2
+,
+1
+]
+B=[1,2,1], there are four occurrences of 
+B
+B in 
+A
+A, starting at indices 
+1
+,
+3
+,
+5
+,
+1,3,5, and 
+9
+9.
+Choosing the occurrences at indices 
+1
+,
+5
+,
+9
+1,5,9 to replace results in 
+[
+−
+1
+,
+2
+,
+−
+1
+,
+3
+,
+−
+1
+]
+[−1,2,−1,3,−1].
+Choosing the occurrences at indices 
+3
+,
+9
+3,9 to replace results in 
+[
+1
+,
+2
+,
+−
+1
+,
+2
+,
+1
+,
+3
+,
+−
+1
+]
+[1,2,−1,2,1,3,−1] instead.
+On the other hand, choosing 
+B
+=
+[
+1
+,
+2
+,
+1
+,
+2
+,
+1
+]
+B=[1,2,1,2,1] is not valid: there are two occurrences of it in 
+A
+A (starting at indices 
+1
+1 and 
+3
+3), but it's not possible to find two disjoint occurrences.
+Define 
+f
+(
+A
+)
+f(A) to be the minimum possible length of 
+A
+A, if this compression operation can be performed however many times you like.
+
+Find the minimum possible value of 
+f
+(
+A
+)
+f(A) across all possible rearrangements of the given array 
+A
+A.
+Note that you are not allowed to rearrange the array during the compression process itself: you can only choose the initial arrangement of elements.
+
+†
+†
+  A subarray of 
+A
+A is any array that can be obtained by deleting some (possibly empty) prefix and some (possibly empty) suffix of 
+A
+A.
+For example, if 
+A
+=
+[
+1
+,
+2
+,
+1
+,
+3
+,
+5
+]
+A=[1,2,1,3,5], some examples of its subarrays are 
+[
+2
+,
+1
+,
+3
+]
+,
+[
+2
+]
+,
+[
+1
+,
+3
+]
+,
+[
+2
+,
+1
+,
+3
+,
+5
+]
+[2,1,3],[2],[1,3],[2,1,3,5]. However, 
+[
+1
+,
+5
+]
+[1,5] is not a subarray of 
+A
+A.
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of two lines of input.
+The first line of each test case contains an integer 
+N
+N — the size of the array 
+A
+A.
+The second line contains 
+N
+N space-separated integers 
+A
+1
+,
+A
+2
+,
+…
+,
+A
+N
+A 
+1
+​
+ ,A 
+2
+​
+ ,…,A 
+N
+​
+  — the elements of the array 
+A
+A.
+Output Format
+For each test case, print a single line containing a single integer - the minimum possible value of 
+f
+(
+A
+)
+f(A) across all rearrangements of 
+A
+A.
+
+Constraints
+1
+≤
+T
+≤
+2
+⋅
+1
+0
+5
+1≤T≤2⋅10 
+5
+ 
+1
+≤
+N
+≤
+2
+⋅
+1
+0
+5
+1≤N≤2⋅10 
+5
+ 
+1
+≤
+A
+i
+≤
+1
+0
+9
+1≤A 
+i
+​
+ ≤10 
+9
+ 
+The sum of 
+N
+N over all test cases won't exceed 
+3
+⋅
+1
+0
+5
+3⋅10 
+5
+ .
+Sample 1:
+Input
+Output
+3
+6
+1 5 2 2 1 6
+9
+5 5 5 7 7 7 3 3 3
+4
+1 3 1 2
+4
+3
+4
+Explanation:
+Test case 
+1
+1: We can do the following:
+
+Choose the rearrangement 
+[
+1
+,
+2
+,
+5
+,
+6
+,
+1
+,
+2
+]
+[1,2,5,6,1,2].
+Then, perform the compression operation with 
+B
+=
+[
+1
+,
+2
+]
+B=[1,2].
+The resulting array is 
+[
+−
+1
+,
+5
+,
+6
+,
+−
+1
+]
+[−1,5,6,−1], which has a length of 
+4
+4.
+It can be proved that obtaining a length smaller than 
+4
+4 is impossible.
+Test case 
+2
+2: Consider the rearrangement 
+[
+3
+,
+7
+,
+5
+,
+3
+,
+7
+,
+5
+,
+3
+,
+7
+,
+5
+]
+[3,7,5,3,7,5,3,7,5]. With 
+B
+=
+[
+3
+,
+7
+,
+5
+]
+B=[3,7,5], the array can be compressed to 
+[
+−
+1
+,
+−
+1
+,
+−
+1
+]
+[−1,−1,−1] which is the best we can do.
+
+Did you like the problem statement?
+4 users found this helpful
+#include <bits/stdc++.h>
+
+using namespace std;
+
+long long arrayCompression(long long n, vector<long long>& arr) {
+    unordered_map<long long, long long> counter;
+
+    for (long long x : arr)
+        counter[x]++;
+    
+    long long result = 1e17;
+    long long foundOnce = 0;
+    long long twice = 2;
+    long long thrice = 3;
+
+    for (pair<long long, long long> entry : counter) {
+        if (entry.second == 1)
+            foundOnce++;
+        twice += entry.second % 2;
+        thrice += entry.second % 3;
+    }
+    result = min(result, min(5 + foundOnce, min(twice, min(thrice, n))));
+    return result;
+}
+
+
+int main(void) {
+    #ifndef ONLINE_JUDGE
+        freopen("input.txt", "r", stdin);
+        freopen("output.txt", "w", stdout);
+    #endif
+
+    long long t;
+    cin >> t;
+
+    while (t--) {
+        long long n;
+        cin >> n;
+
+        vector<long long> arr(n);
+
+        for (long long i = 0; i < n; i++)
+            cin >> arr[i];
+        
+        long long result = arrayCompression(n, arr);
+        cout << result << endl;
+    }
+    return 0;
+}
