@@ -51,6 +51,71 @@ OutputCopy
 #........
 #########
 
+
+
+import java.util.Scanner;
+
+public class FoxAndSnake {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int n = scanner.nextInt(); // Number of rows
+        int m = scanner.nextInt(); // Number of columns
+
+        // Create a 2D array to represent the grid
+        char[][] grid = new char[n][m];
+
+        // Fill the grid based on the snake pattern
+        for (int i = 0; i < n; i++) {
+            if (i % 2 == 0) {
+                // Odd-numbered rows: fill the entire row with '#'
+                for (int j = 0; j < m; j++) {
+                    grid[i][j] = '#';
+                }
+            } else {
+                // Even-numbered rows: alternate between placing '#' at the end or the beginning
+                if ((i / 2) % 2 == 0) {
+                    // Place '#' at the end
+                    for (int j = 0; j < m - 1; j++) {
+                        grid[i][j] = '.';
+                    }
+                    grid[i][m - 1] = '#';
+                } else {
+                    // Place '#' at the beginning
+                    grid[i][0] = '#';
+                    for (int j = 1; j < m; j++) {
+                        grid[i][j] = '.';
+                    }
+                }
+            }
+        }
+
+        // Print the grid
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                System.out.print(grid[i][j]);
+            }
+            System.out.println();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 import java.util.Scanner;
 
 public class FoxAndSnake {
