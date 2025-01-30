@@ -1,0 +1,94 @@
+A. Dislike of Threes
+time limit per test1 second
+memory limit per test256 megabytes
+Polycarp doesn't like integers that are divisible by 3
+ or end with the digit 3
+ in their decimal representation. Integers that meet both conditions are disliked by Polycarp, too.
+
+Polycarp starts to write out the positive (greater than 0
+) integers which he likes: 1,2,4,5,7,8,10,11,14,16,…
+. Output the k
+-th element of this sequence (the elements are numbered from 1
+).
+
+Input
+The first line contains one integer t
+ (1≤t≤100
+) — the number of test cases. Then t
+ test cases follow.
+
+Each test case consists of one line containing one integer k
+ (1≤k≤1000
+).
+
+Output
+For each test case, output in a separate line one integer x
+ — the k
+-th element of the sequence that was written out by Polycarp.
+
+Example
+InputCopy
+10
+1
+2
+3
+4
+5
+6
+7
+8
+9
+1000
+OutputCopy
+1
+2
+4
+5
+7
+8
+10
+11
+14
+1666
+
+
+import java.util.Scanner;
+
+public class DislikeOfThrees {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        int t = scanner.nextInt(); // Number of test cases
+        int[] results = new int[t];
+
+        for (int i = 0; i < t; i++) {
+            int k = scanner.nextInt(); // Read k for each test case
+            results[i] = findKthNumber(k);
+        }
+
+        // Output all results
+        for (int result : results) {
+            System.out.println(result);
+        }
+    }
+
+    // Function to find the k-th liked number
+    private static int findKthNumber(int k) {
+        int count = 0;
+        int number = 0;
+
+        while (count < k) {
+            number++;
+            if (isLikedNumber(number)) {
+                count++;
+            }
+        }
+
+        return number;
+    }
+
+    // Check if a number is liked by Polycarp
+    private static boolean isLikedNumber(int number) {
+        return number % 3 != 0 && number % 10 != 3;
+    }
+}
