@@ -1,0 +1,490 @@
+Advitiya Security Vault
+Toofan, a fearless tech prodigy, stumbles upon his most daring challenge yet — hacking into Advitiya's Security Vault, the centerpiece of IIT Ropar’s annual tech fest. This vault is said to guard blueprints for groundbreaking exhibits and top-secret festival surprises.
+
+Toofan knows that the vault's passcode contains 
+N
+N number to enter, with each number being an integer between 
+1
+1 and 
+K
+K. While exploring, he found a scrap of paper that gave him some information about the passcode.
+
+In particular, Toofan has with him an array 
+A
+A of length 
+N
+N, where each 
+A
+i
+A 
+i
+​
+  is either 
+0
+0 or an integer between 
+1
+1 and 
+K
+K.
+A
+i
+=
+0
+A 
+i
+​
+ =0 means no information is known about the 
+i
+i-th digit, and 
+1
+≤
+A
+i
+≤
+K
+1≤A 
+i
+​
+ ≤K means the 
+i
+i-th digit of the passcode is known to be 
+A
+i
+A 
+i
+​
+ .
+
+The vault is a bit faulty: it will open if either the correct code is entered, or the reverse of the correct code is entered.
+For example, if the vault's actual passcode is 
+[
+1
+,
+2
+,
+3
+]
+[1,2,3] then it will open even if 
+[
+3
+,
+2
+,
+1
+]
+[3,2,1] is entered.
+
+In an attempt to open the vault, Toofan will try every possible passcode that matches the information he has, in lexicographic order. However, if he has already tried the reverse of a passcode before, he will skip the passcode since he knows about the vault being faulty (i.e. if he has tried 
+[
+1
+,
+2
+,
+3
+]
+[1,2,3] before, he will not try 
+[
+3
+,
+2
+,
+1
+]
+[3,2,1]).
+
+In the worst case, how many attempts must Toofan make before the vault is opened?
+The answer can be large, so compute it modulo 
+1
+0
+9
++
+7
+10 
+9
+ +7.
+
+Input Format
+The first line of input contains a single integer 
+T
+T, the number of test cases.
+Each test case consists of two lines of input.
+The first line contains two space-separated integers 
+N
+N and 
+K
+K: the length of the code, and the number of possible digits.
+The second line contains 
+N
+N space-separated integers 
+A
+1
+,
+A
+2
+,
+…
+,
+A
+N
+A 
+1
+​
+ ,A 
+2
+​
+ ,…,A 
+N
+​
+ , denoting the information known to Toofan about the code.
+Output Format
+For each test case, output a single integer: the minimum number of passcodes Toofan must try, modulo 
+1
+0
+9
++
+7
+10 
+9
+ +7.
+
+Constraints
+1
+≤
+T
+≤
+1
+0
+5
+1≤T≤10 
+5
+ 
+1
+≤
+N
+≤
+2
+⋅
+1
+0
+5
+1≤N≤2⋅10 
+5
+ 
+1
+≤
+K
+≤
+1
+0
+9
+1≤K≤10 
+9
+ 
+0
+≤
+A
+i
+≤
+K
+0≤A 
+i
+​
+ ≤K
+The sum of 
+N
+N over all test cases does not exceed 
+2
+⋅
+1
+0
+5
+2⋅10 
+5
+ .
+Sample 1:
+Input
+Output
+4
+2 3
+0 0
+4 7
+1 0 0 2
+5 10
+4 0 0 6 0
+11 343
+0 0 0 132 0 205 132 0 0 0 0
+6
+49
+1000
+724725156
+Explanation:
+Test case 
+1
+1: Toofan has no information at all, and so needs to try every passcode. This will go as follows:
+
+He will try 
+[
+1
+,
+1
+]
+,
+[
+1
+,
+2
+]
+,
+[
+1
+,
+3
+]
+[1,1],[1,2],[1,3].
+[
+2
+,
+1
+]
+[2,1] will be skipped since its reverse, 
+[
+1
+,
+2
+]
+[1,2], was already tried.
+He will then try 
+[
+2
+,
+2
+]
+,
+[
+2
+,
+3
+]
+[2,2],[2,3].
+[
+3
+,
+1
+]
+[3,1] will be skipped since 
+[
+1
+,
+3
+]
+[1,3] was already tried.
+[
+3
+,
+2
+]
+[3,2] will be skipped since 
+[
+2
+,
+3
+]
+[2,3] was already tried.
+[
+3
+,
+3
+]
+[3,3] will be tried.
+In total, 
+6
+6 passcodes will be tried.
+
+Test case 
+2
+2: There are 
+7
+⋅
+7
+=
+49
+7⋅7=49 possible passcodes that match the given pattern, and they all need to be tried.
+
+Did you like the problem statement?
+import java.util.*;
+import java.io.*;
+
+class main {
+  public static long m = (long) 1e9 + 7;
+
+  public static long power(long a, long b) {// a^b % m
+    long res = 1;
+    a %= m;
+    if (a == 0) {
+      return 0;
+    }
+    while (b > 0) {
+      if ((b & 1) != 0) {
+        res = (res * a) % m;
+        b--;
+      } else {
+        b >>= 1;
+        a = (a * a) % m;
+      }
+    }
+    return res;
+  }
+
+  public static void main(String[] args) throws IOException {
+    Reader sc = new Reader();
+    PrintWriter out = new PrintWriter(System.out);
+    int t = sc.nextInt();
+    while (t-- > 0) {
+      int n = sc.nextInt();
+      long zero = 0, k = sc.nextInt(), a[] = new long[n];
+      for (int i = 0; i < n; i++) {
+        a[i] = sc.nextLong();
+        if (a[i] == 0)
+          zero++;
+      }
+      long ans = power(k, zero);
+      // ans includes all palindromes only once - that's fine
+      // but it includes both 1234 and 4321 - that's incorrect as it should be counted
+      // only once.
+      long cnt = 0;
+      for (int i = 0; i < (n + 1) / 2; i++) {
+        if (a[i] == 0 && a[n - 1 - i] == 0) {
+          if (i == n - 1 - i)
+            cnt++;
+          else
+            cnt += 2;
+        } else if (a[i] != 0 && a[n - 1 - i] != 0) {
+          if (a[i] != a[n - 1 - i]) {
+            cnt = 0;
+            break;
+          }
+        }
+      }
+      long twice = power(k, cnt);
+      // twice includes all palindromes + (1234 & 4321)
+      long palindromes = power(k, (cnt + 1) / 2);
+      twice -= palindromes;
+      long two_inverse = (m - m / 2) % m;
+      twice *= two_inverse;
+      twice %= m;
+      out.println((ans - twice + m) % m);
+
+    }
+    out.close();
+  }
+
+  // ------------------------------------reader class-----------------------------
+  static class Reader {
+    final private int BUFFER_SIZE = 1 << 16;
+    private DataInputStream din;
+    private byte[] buffer;
+    private int bufferPointer, bytesRead;
+
+    public Reader() {
+      din = new DataInputStream(System.in);
+      buffer = new byte[BUFFER_SIZE];
+      bufferPointer = bytesRead = 0;
+    }
+
+    public Reader(String file_name) throws IOException {
+      din = new DataInputStream(
+          new FileInputStream(file_name));
+      buffer = new byte[BUFFER_SIZE];
+      bufferPointer = bytesRead = 0;
+    }
+
+    public String readLine() throws IOException {
+      byte[] buf = new byte[64]; // line length
+      int cnt = 0, c;
+      while ((c = read()) != -1) {
+        if (c == '\n') {
+          if (cnt != 0) {
+            break;
+          } else {
+            continue;
+          }
+        }
+        buf[cnt++] = (byte) c;
+      }
+      return new String(buf, 0, cnt);
+    }
+
+    public int nextInt() throws IOException {
+      int ret = 0;
+      byte c = read();
+      while (c <= ' ') {
+        c = read();
+      }
+      boolean neg = (c == '-');
+      if (neg)
+        c = read();
+      do {
+        ret = ret * 10 + c - '0';
+      } while ((c = read()) >= '0' && c <= '9');
+      if (neg)
+        return -ret;
+      return ret;
+    }
+
+    public long nextLong() throws IOException {
+      long ret = 0;
+      byte c = read();
+      while (c <= ' ')
+        c = read();
+      boolean neg = (c == '-');
+      if (neg)
+        c = read();
+      do {
+        ret = ret * 10 + c - '0';
+      } while ((c = read()) >= '0' && c <= '9');
+      if (neg)
+        return -ret;
+      return ret;
+    }
+
+    public double nextDouble() throws IOException {
+      double ret = 0, div = 1;
+      byte c = read();
+      while (c <= ' ')
+        c = read();
+      boolean neg = (c == '-');
+      if (neg)
+        c = read();
+      do {
+        ret = ret * 10 + c - '0';
+      } while ((c = read()) >= '0' && c <= '9');
+      if (c == '.') {
+        while ((c = read()) >= '0' && c <= '9') {
+          ret += (c - '0') / (div *= 10);
+        }
+      }
+      if (neg)
+        return -ret;
+      return ret;
+    }
+
+    private void fillBuffer() throws IOException {
+      bytesRead = din.read(buffer, bufferPointer = 0, BUFFER_SIZE);
+      if (bytesRead == -1)
+        buffer[0] = -1;
+    }
+
+    private byte read() throws IOException {
+      if (bufferPointer == bytesRead)
+        fillBuffer();
+      return buffer[bufferPointer++];
+    }
+
+    public void close() throws IOException {
+      if (din == null)
+        return;
+      din.close();
+    }
+  }
+  // -----------------------------------------------
+}
