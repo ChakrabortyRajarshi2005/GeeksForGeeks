@@ -1,0 +1,410 @@
+#include <bits/stdc++.h>
+using namespace std;
+ 
+// We'll use this solution based on a DP over bitmasks up to M = 2^K >= 2N.
+ 
+int main(){
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+ 
+    int T; 
+    cin >> T;
+    while(T--){
+        int N; 
+        cin >> N;
+        vector<int> A(N);
+        for (int i = 0; i < N; i++){
+            cin >> A[i];
+        }
+ 
+        // Since 0 <= A[i] <= N, every prefix OR is at most 2N.
+        // Let M be a power of two with M >= 2*N.
+        int limVal = 2 * N;
+        int K = 0;
+        while((1 << K) < limVal) K++;
+        int M = 1 << K;  // our dp and sub arrays will be sized M.
+ 
+        // Build frequency: freq[mask] = true if some A[i] equals mask.
+        vector<bool> freq(M, false);
+        for (int a : A) {
+            if(a < M)
+                freq[a] = true;
+        }
+ 
+        // Precompute popcount for each mask (we need to iterate in order of increasing popcount).
+        vector<int> popc(M, 0);
+        for (int mask = 0; mask < M; mask++){
+            popc[mask] = __builtin_popcount(mask);
+        }
+ 
+        // Bucket the masks by popcount.
+        vector<vector<int>> masksByPop(K+1);
+        for (int mask = 0; mask < M; mask++){
+            int p = popc[mask];
+            if(p <= K)
+                masksByPop[p].push_back(mask);
+        }
+ 
+        // Compute sub[mask]:
+        // If freq[mask] is true then sub[mask] = mask.
+        // Otherwise, sub[mask] = OR_{b in mask} sub[mask without bit b].
+        vector<int> sub(M, 0);
+        // Base: mask==0.
+        sub[0] = 0; // (if 0 appears, then freq[0] is true and we’d have sub[0]=0 anyway)
+ 
+        // Process masks in increasing order of popcount.
+        for (int p = 1; p <= K; p++){
+            for (int mask : masksByPop[p]){
+                if(freq[mask]){
+                    sub[mask] = mask;
+                } else {
+                    int cur = 0;
+                    // For every bit b set in mask, OR in sub[mask without (1<<b)]
+                    for (int b = 0; b < K; b++){
+                        if(mask & (1 << b)){
+                            int without = mask ^ (1 << b);
+                            cur |= sub[without];
+                        }
+                    }
+                    sub[mask] = cur;
+                }
+            }
+        }
+ 
+        // Now compute dp[mask]:
+        // dp[mask] = maximum chain length (i.e. number of distinct prefix ORs)
+        // achievable using only bits in mask.
+        // Base: for mask==0, if 0 appears then we can start with 0 (chain length 1), else 0.
+        const int NEG = -1000000000;
+        vector<int> dp(M, NEG);
+        dp[0] = (freq[0] ? 1 : 0);
+ 
+        // For nonzero masks, iterate in increasing order of popcount.
+        for (int p = 1; p <= K; p++){
+            for (int mask : masksByPop[p]){
+                int candidate1 = NEG;
+                int candidate2 = NEG;
+                // Consider every set bit in mask.
+                for (int b = 0; b < K; b++){
+                    if(mask & (1 << b)){
+                        int without = mask ^ (1 << b);
+                        candidate1 = max(candidate1, dp[without]);
+                        candidate2 = max(candidate2, dp[without] + 1);
+                    }
+                }
+                // If mask is "achievable" (i.e. sub[mask] == mask), then we can “finish”
+                // a prefix OR with this mask.
+                if(sub[mask] == mask){
+                    dp[mask] = max(candidate1, candidate2);
+                } else {
+                    dp[mask] = candidate1;
+                }
+            }
+        }
+ 
+        // The answer is the maximum dp[mask] for mask in [0, M).
+        int ans = 0;
+        for (int mask = 0; mask < M; mask++){
+            ans = max(ans, dp[mask]);
+        }
+ 
+        cout << ans << "\n";
+    }
+    return 0;
+}
+Prefix OR
+For an array 
+B
+B containing 
+M
+M non-negative integers, we define 
+f
+(
+B
+)
+f(B) to be the number of distinct values among its prefix bitwise ORs.
+
+Formally, let 
+P
+P be an array of length 
+M
+M, such that:
+
+P
+1
+=
+B
+1
+P 
+1
+​
+ =B 
+1
+​
+ 
+P
+i
+=
+B
+i
+ 
+∣
+ 
+P
+i
+−
+1
+P 
+i
+​
+ =B 
+i
+​
+  ∣ P 
+i−1
+​
+  for each 
+1
+<
+i
+≤
+M
+1<i≤M.
+Here 
+∣
+∣ denotes the bitwise OR operation.
+f
+(
+B
+)
+f(B) is then defined to be the number of distinct elements in 
+P
+P.
+
+You are given an array 
+A
+A consisting of 
+N
+N integers, satisfying 
+0
+≤
+A
+i
+≤
+N
+0≤A 
+i
+​
+ ≤N.
+Find the maximum possible value of 
+f
+(
+A
+)
+f(A) across all rearrangements of 
+A
+A.
+
+Input Format
+The first line contains a single integer 
+T
+T — the number of test cases.
+Each test case consists of two lines of input.
+The first line of each test case contains an integer 
+N
+N — the size of the array.
+The second line of each test case contains 
+N
+N space-separated integers 
+A
+1
+,
+A
+2
+,
+…
+,
+A
+N
+A 
+1
+​
+ ,A 
+2
+​
+ ,…,A 
+N
+​
+  — the elements of the array 
+A
+A.
+Output Format
+For each test case, output a single integer — the maximum value of 
+f
+(
+A
+)
+f(A) across all rearrangements of 
+A
+A.
+
+Constraints
+1
+≤
+T
+≤
+1
+0
+5
+1≤T≤10 
+5
+ 
+1
+≤
+N
+≤
+2
+×
+1
+0
+5
+1≤N≤2×10 
+5
+ 
+0
+≤
+A
+i
+≤
+N
+0≤A 
+i
+​
+ ≤N
+The sum of 
+N
+N over all test cases does not exceed 
+2
+×
+1
+0
+5
+2×10 
+5
+ .
+Sample 1:
+Input
+Output
+2
+3
+3 2 1
+7
+0 3 5 4 7 0 6
+2
+4
+Explanation:
+Test case 
+1
+1: Let's look at all rearrangements of 
+A
+A.
+
+[
+3
+,
+2
+,
+1
+]
+[3,2,1]: the prefix OR array is 
+[
+3
+,
+3
+,
+3
+]
+[3,3,3], with one distinct element.
+[
+3
+,
+1
+,
+2
+]
+[3,1,2]: the prefix OR array is 
+[
+3
+,
+3
+,
+3
+]
+[3,3,3], with one distinct element.
+[
+1
+,
+2
+,
+3
+]
+[1,2,3]: the prefix OR array is 
+[
+1
+,
+3
+,
+3
+]
+[1,3,3], with two distinct elements.
+[
+1
+,
+3
+,
+2
+]
+[1,3,2]: the prefix OR array is 
+[
+1
+,
+3
+,
+3
+]
+[1,3,3], with two distinct elements.
+[
+2
+,
+1
+,
+3
+]
+[2,1,3]: the prefix OR array is 
+[
+2
+,
+3
+,
+3
+]
+[2,3,3], with two distinct elements.
+[
+2
+,
+3
+,
+1
+]
+[2,3,1]: the prefix OR array is 
+[
+2
+,
+3
+,
+3
+]
+[2,3,3], with two distinct elements.
+The maximum number of distinct prefix ORs across all rearrangements is hence 
+2
+2
