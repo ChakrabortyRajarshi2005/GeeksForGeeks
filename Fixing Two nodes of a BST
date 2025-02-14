@@ -1,0 +1,55 @@
+Fixing Two nodes of a BST
+Difficulty: HardAccuracy: 53.68%Submissions: 59K+Points: 8Average Time: 45m
+Given the root of a Binary search tree(BST), where exactly two nodes were swapped by mistake. Your task is to fix (or correct) the BST by swapping them back. Do not change the structure of the tree.
+Note: It is guaranteed that the given input will form BST, except for 2 nodes that will be wrong. All changes must be reflected in the original Binary search tree(BST).
+ 
+Examples :
+Input: root = [10, 5, 8, 2, 20]
+     
+Output: 1
+       
+
+Explanation: The nodes 20 and 8 were swapped. 
+Input: root = [5, 10, 20, 2, 8]
+     
+Output: 1 
+     
+Explanation: The nodes 10 and 5 were swapped.
+Constraints:
+1 ≤ Number of nodes ≤ 103
+lass Solution {
+    static void correctBSTUtil(Node root, Node[] first, Node[] middle, Node[] last,
+                               Node[] prev) {
+        if (root == null) return;
+
+        correctBSTUtil(root.left, first, middle, last, prev);
+
+        if (prev[0] != null && root.data < prev[0].data) {
+            if (first[0] == null) {
+                first[0] = prev[0];
+                middle[0] = root;
+            } else {
+                last[0] = root;
+            }
+        }
+
+        prev[0] = root;
+        correctBSTUtil(root.right, first, middle, last, prev);
+    }
+
+    static void correctBST(Node root) {
+        Node[] first = {null}, middle = {null}, last = {null}, prev = {null};
+        correctBSTUtil(root, first, middle, last, prev);
+
+        if (first[0] != null && last[0] != null)
+            swap(first[0], last[0]);
+        else if (first[0] != null && middle[0] != null)
+            swap(first[0], middle[0]);
+    }
+
+    static void swap(Node a, Node b) {
+        int temp = a.data;
+        a.data = b.data;
+        b.data = temp;
+    }
+}
