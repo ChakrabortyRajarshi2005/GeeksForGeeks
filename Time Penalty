@@ -1,0 +1,465 @@
+Time Penalty
+Unlike a usual CodeChef Starters contest, Starters 173 has a time penalty for every wrong submission.
+
+You are participating in CodeChef Starters 173, which has a time penalty of 
+10
+10 minutes for every incorrect submission you make.
+That is, the total penalty for a problem equals the number of minutes from the start of the contest till your submission receives the AC verdict, plus 
+10
+10 minutes for every incorrect submission made before that.
+
+You solved a problem 
+X
+X minutes after the start of the contest, and made 
+Y
+Y incorrect submissions while doing so.
+What's the total time penalty for this problem?
+
+Input Format
+The first and only line of input will contain two space-separated integers 
+X
+X and 
+Y
+Y — the number of minutes after which you solved the problem, and the number of wrong submissions you made.
+Output Format
+Output a single integer: the total time penalty for the problem.
+
+Constraints
+1
+≤
+X
+≤
+150
+1≤X≤150
+0
+≤
+Y
+≤
+10
+0≤Y≤10
+Sample 1:
+Input
+Output
+3 2
+23
+Explanation:
+The problem was solved 
+3
+3 minutes after the start of the contest, with 
+2
+2 incorrect submissions.
+Since each incorrect submission adds 
+10
+10 minutes to the penalty, the total penalty equals 
+3
++
+2
+×
+10
+=
+23
+3+2×10=23.
+
+Sample 2:
+Input
+Output
+58 0
+58
+Explanation:
+The problem was solved 
+58
+58 minutes after the start of the contest, with 
+0
+0 incorrect submissions.
+So, the total time penalty is just 
+58
+58.
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Scanner;
+
+// ==================================================
+// Copyright (c) Arnava Kumar Sinha. All Rights Reserved.
+// This code is part of the DSAToolkit project.
+// Unauthorized copying or distribution of this code 
+// is prohibited without explicit permission.
+// ==================================================
+
+class DSAToolkit {
+
+    // === INPUT HANDLING === //
+
+    private static final Scanner sc = new Scanner(System.in);
+
+    // Reads an integer from input
+    // Copyright (c) Arnava Kumar Sinha
+    public static int readInt() {
+        return sc.nextInt();
+    }
+
+    // Reads a long from input
+    // Copyright (c) Arnava Kumar Sinha
+    public static long readLong() {
+        return sc.nextLong();
+    }
+
+    // Reads an array of integers from input
+    // Copyright (c) Arnava Kumar Sinha
+    public static int[] readIntArray(int n) {
+        int[] arr = new int[n];
+        for (int i = 0; i < n; i++) {
+            arr[i] = sc.nextInt();
+        }
+        return arr;
+    }
+
+    // Reads a 2D array (matrix) from input
+    // Copyright (c) Arnava Kumar Sinha
+    public static int[][] read2DArray(int rows, int cols) {
+        int[][] matrix = new int[rows][cols];
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                matrix[i][j] = sc.nextInt();
+            }
+        }
+        return matrix;
+    }
+
+    // === ARRAY OPERATIONS === //
+
+    // Build prefix sum array
+    // Copyright (c) Arnava Kumar Sinha
+    public static int[] buildPrefixSum(int[] arr) {
+        int[] prefix = new int[arr.length];
+        prefix[0] = arr[0];
+        for (int i = 1; i < arr.length; i++) {
+            prefix[i] = prefix[i - 1] + arr[i];
+        }
+        return prefix;
+    }
+
+    // Kadane's Algorithm for maximum subarray sum
+    // Copyright (c) Arnava Kumar Sinha
+    public static int maxSubarraySum(int[] arr) {
+        int maxSum = Integer.MIN_VALUE, currSum = 0;
+        for (int num: arr) {
+            currSum = Math.max(num, currSum + num);
+            maxSum = Math.max(maxSum, currSum);
+        }
+        return maxSum;
+    }
+
+    // Count subarrays with sum equal to K
+    // Copyright (c) Arnava Kumar Sinha
+    public static int subarraySumEqualsK(int[] arr, int k) {
+        Map < Integer, Integer > prefixSumCount = new HashMap < > ();
+        prefixSumCount.put(0, 1);
+
+        int currSum = 0, count = 0;
+        for (int num: arr) {
+            currSum += num;
+            if (prefixSumCount.containsKey(currSum - k)) {
+                count += prefixSumCount.get(currSum - k);
+            }
+            prefixSumCount.put(currSum, prefixSumCount.getOrDefault(currSum, 0) + 1);
+        }
+        return count;
+    }
+
+    // === MATHEMATICAL FUNCTIONS === //
+
+    // Fibonacci series up to a limit
+    // Copyright (c) Arnava Kumar Sinha
+    public static void fibonacciSeries(long limit) {
+        long a = 0, b = 1;
+        System.out.print(a + " " + b + " ");
+        while (a + b <= limit) {
+            long c = a + b;
+            a = b;
+            b = c;
+            System.out.print(c + " ");
+        }
+    }
+
+    // Power of a number (n^p)
+    // Copyright (c) Arnava Kumar Sinha
+    public static long power(long n, long p) {
+        long result = 1;
+        for (long i = 1; i <= p; i++) {
+            result *= n;
+        }
+        return result;
+    }
+
+    // Count digits in a number
+    // Copyright (c) Arnava Kumar Sinha
+    public static long countDigits(long n) {
+        long count = 0;
+        while (n > 0) {
+            count++;
+            n /= 10;
+        }
+        return count;
+    }
+
+    // Sum of digits of a number
+    // Copyright (c) Arnava Kumar Sinha
+    public static long sumOfDigits(long n) {
+        long sum = 0;
+        while (n > 0) {
+            sum += n % 10;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    // Sum of squares of digits
+    // Copyright (c) Arnava Kumar Sinha
+    public static long sumOfSquareOfDigits(long n) {
+        long sum = 0;
+        while (n > 0) {
+            long digit = n % 10;
+            sum += digit * digit;
+            n /= 10;
+        }
+        return sum;
+    }
+
+    // Factorial of a number
+    // Copyright (c) Arnava Kumar Sinha
+    public static long factorial(long n) {
+        long result = 1;
+        for (long i = 1; i <= n; i++) {
+            result *= i;
+        }
+        return result;
+    }
+
+    // Sum of factors of a number
+    // Copyright (c) Arnava Kumar Sinha
+    public static long sumOfFactors(long n) {
+        long sum = 0;
+        for (long i = 1; i <= n / 2; i++) {
+            if (n % i == 0) {
+                sum += i;
+            }
+        }
+        return sum;
+    }
+
+    // Check if a string is a palindrome
+    // Copyright (c) Arnava Kumar Sinha
+    public static boolean isPalindrome(String s) {
+        String cleaned = s.toLowerCase().replaceAll("[^a-zA-Z0-9]", "");
+        String reversed = new StringBuilder(cleaned).reverse().toString();
+        return cleaned.equals(reversed);
+    }
+
+    // === SORTING ALGORITHMS === //
+
+    // Merge sort algorithm
+    // Copyright (c) Arnava Kumar Sinha
+    public static void mergeSort(int[] arr, int left, int right) {
+        if (left < right) {
+            int mid = left + (right - left) / 2;
+            mergeSort(arr, left, mid);
+            mergeSort(arr, mid + 1, right);
+            merge(arr, left, mid, right);
+        }
+    }
+
+    private static void merge(int[] arr, int left, int mid, int right) {
+        int n1 = mid - left + 1, n2 = right - mid;
+        int[] leftArray = new int[n1], rightArray = new int[n2];
+
+        for (int i = 0; i < n1; i++)
+            leftArray[i] = arr[left + i];
+        for (int i = 0; i < n2; i++)
+            rightArray[i] = arr[mid + 1 + i];
+
+        int i = 0, j = 0, k = left;
+        while (i < n1 && j < n2)
+            arr[k++] = leftArray[i++] <= rightArray[j] ? leftArray[i - 1] : rightArray[j++];
+        while (i < n1)
+            arr[k++] = leftArray[i++];
+        while (j < n2)
+            arr[k++] = rightArray[j++];
+    }
+
+    // Quick sort algorithm
+    // Copyright (c) Arnava Kumar Sinha
+    public static void quickSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int pi = partition(arr, low, high);
+            quickSort(arr, low, pi - 1);
+            quickSort(arr, pi + 1, high);
+        }
+    }
+
+    private static int partition(int[] arr, int low, int high) {
+        int pivot = arr[high];
+        int i = low - 1;
+
+        for (int j = low; j < high; j++) {
+            if (arr[j] < pivot)
+                swap(arr, ++i, j);
+        }
+        swap(arr, i + 1, high);
+        return i + 1;
+    }
+
+    private static void swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+
+    // === SEARCHING ALGORITHMS === //
+
+    // Binary search algorithm
+    // Copyright (c) Arnava Kumar Sinha
+    public static int binarySearch(int[] arr, int target) {
+        int left = 0, right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] == target)
+                return mid;
+            if (arr[mid] < target)
+                left = mid + 1;
+            else
+                right = mid - 1;
+        }
+        return -1;
+    }
+
+    // Lower bound search
+    // Copyright (c) Arnava Kumar Sinha
+    public static int lowerBound(int[] arr, int target) {
+        int left = 0, right = arr.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] < target)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return left;
+    }
+
+    // Upper bound search
+    // Copyright (c) Arnava Kumar Sinha
+    public static int upperBound(int[] arr, int target) {
+        int left = 0, right = arr.length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] <= target)
+                left = mid + 1;
+            else
+                right = mid;
+        }
+        return left;
+    }
+
+    // === GRAPH ALGORITHMS === //
+
+    // Depth-first search (DFS)
+    // Copyright (c) Arnava Kumar Sinha
+    public static void dfs(List < List < Integer >> graph, int node, boolean[] visited) {
+        visited[node] = true;
+        System.out.print(node + " ");
+        for (int neighbor: graph.get(node)) {
+            if (!visited[neighbor])
+                dfs(graph, neighbor, visited);
+        }
+    }
+
+    // Breadth-first search (BFS)
+    // Copyright (c) Arnava Kumar Sinha
+    public static void bfs(List < List < Integer >> graph, int start) {
+        Queue < Integer > queue = new LinkedList < > ();
+        boolean[] visited = new boolean[graph.size()];
+        queue.offer(start);
+        visited[start] = true;
+
+        while (!queue.isEmpty()) {
+            int node = queue.poll();
+            System.out.print(node + " ");
+            for (int neighbor: graph.get(node)) {
+                if (!visited[neighbor]) {
+                    visited[neighbor] = true;
+                    queue.offer(neighbor);
+                }
+            }
+        }
+    }
+
+    // Dijkstra's Algorithm for shortest paths
+    // Copyright (c) Arnava Kumar Sinha
+    public static int[] dijkstra(int[][] graph, int src) {
+        int n = graph.length;
+        int[] dist = new int[n];
+        Arrays.fill(dist, Integer.MAX_VALUE);
+        dist[src] = 0;
+
+        PriorityQueue < int[] > pq = new PriorityQueue < > ((a, b) -> a[1] - b[1]);
+        pq.offer(new int[] {
+            src,
+            0
+        });
+
+        while (!pq.isEmpty()) {
+            int[] curr = pq.poll();
+            int node = curr[0], distance = curr[1];
+            for (int neighbor = 0; neighbor < n; neighbor++) {
+                if (graph[node][neighbor] != 0) {
+                    int newDist = distance + graph[node][neighbor];
+                    if (newDist < dist[neighbor]) {
+                        dist[neighbor] = newDist;
+                        pq.offer(new int[] {
+                            neighbor,
+                            newDist
+                        });
+                    }
+                }
+            }
+        }
+        return dist;
+    }
+
+    // === MAIN DRIVER === //
+
+    // Test case driver function
+    // Copyright (c) Arnava Kumar Sinha
+    public static void testCaseSolve() {
+        int t = readInt(); // Read number of test cases
+        while (t--> 0) {
+            // Example of how to use methods
+            int n = readInt(); // Read the size of the array
+            int[] arr = readIntArray(n);
+
+            System.out.println("Max Subarray Sum: " + maxSubarraySum(arr));
+        }
+    }
+
+    // Main function for solving individual cases
+    // Copyright (c) Arnava Kumar Sinha
+    public static void solve() {
+        long x = readInt();
+        long y = readInt();
+
+        System.out.println((x+10*y));
+    }
+}
+
+class Codechef {
+    // Main driver method
+    // Copyright (c) Arnava Kumar Sinha
+    public static void main(String[] args) {
+        DSAToolkit.solve();
+    }
+}
