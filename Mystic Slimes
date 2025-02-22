@@ -1,0 +1,430 @@
+Mystic Slimes
+There are 
+N
+N mystic slimes arranged in a line, and the power of the 
+i
+i-th slime is 
+A
+i
+A 
+i
+​
+ .
+
+You need to perform the following operations until only one slime remains:
+
+Choose two adjacent indices 
+i
+i, 
+j
+j (
+1
+≤
+i
+,
+j
+≤
+∣
+A
+∣
+1≤i,j≤∣A∣, 
+∣
+i
+−
+j
+∣
+=
+1
+∣i−j∣=1), and let the 
+i
+i-th slime eat the 
+j
+j-th slime. After this operation, the power of the 
+i
+i-th slime becomes 
+max
+⁡
+(
+0
+,
+A
+i
+−
+A
+j
+)
+max(0,A 
+i
+​
+ −A 
+j
+​
+ ) (while the 
+j
+j-th slime is removed).
+Here, it is not necessary that 
+A
+i
+≥
+A
+j
+A 
+i
+​
+ ≥A 
+j
+​
+ , i.e. even a smaller slime can eat a bigger slime.
+Note that after each operation, the number of slimes decreases by 
+1
+1, and all slimes are reindexed starting from 
+1
+1. The relative order between uneaten slimes remains unchanged.
+
+Find the maximum possible power of the last remaining slime.
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of multiple lines of input.
+The first line of each test contains 
+N
+N - the size of the array.
+The second line contains 
+N
+N integers - 
+A
+1
+,
+A
+2
+,
+.
+.
+.
+,
+A
+N
+A 
+1
+​
+ ,A 
+2
+​
+ ,...,A 
+N
+​
+ .
+Output Format
+For each test case, output on a new line the maximum possible power of the last remaining slime.
+
+Constraints
+1
+≤
+T
+≤
+1000
+1≤T≤1000
+2
+≤
+N
+≤
+50
+2≤N≤50
+1
+≤
+A
+i
+≤
+1000
+1≤A 
+i
+​
+ ≤1000
+Sample 1:
+Input
+Output
+5
+2
+1 2
+3
+1 2 3
+3
+1 100 10
+2
+1000 1000
+4
+1 1 1 1
+1
+3
+89
+0
+1
+Explanation:
+Test Case 1 : We choose indices 
+i
+=
+2
+,
+j
+=
+1
+i=2,j=1 and let 
+2
+2nd slime eat the 
+1
+1st. Now, the new power of the 
+2
+2nd slime becomes 
+1
+1 (and it is re-indexed to position 
+1
+1). Since only one slime remains, the answer here is 
+1
+1.
+
+Test Case 2 : We perform the following steps:
+
+A
+=
+[
+1
+,
+2
+,
+3
+]
+A=[1,2,3], pick 
+i
+=
+1
+,
+j
+=
+2
+i=1,j=2. The updated powers are 
+[
+0
+,
+3
+]
+[0,3].
+A
+=
+[
+0
+,
+3
+]
+A=[0,3], pick 
+i
+=
+2
+,
+j
+=
+1
+i=2,j=1. The updated power of the last remaining slime is 
+3
+3.
+Hence, the answer is 
+3
+3.
+import java.io.*;
+import java.util.*;
+
+class CodeChef {
+
+    // Fast Input and Output
+    static class FastIO {
+        BufferedReader br;
+        StringTokenizer st;
+
+        public FastIO() {
+            br = new BufferedReader(new InputStreamReader(System.in));
+        }
+
+        String next() {
+            while (st == null || !st.hasMoreElements()) {
+                try {
+                    st = new StringTokenizer(br.readLine());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            return st.nextToken();
+        }
+
+        int nextInt() {
+            return Integer.parseInt(next());
+        }
+
+        long nextLong() {
+            return Long.parseLong(next());
+        }
+
+        double nextDouble() {
+            return Double.parseDouble(next());
+        }
+
+        String nextLine() {
+            String str = "";
+            try {
+                str = br.readLine();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return str;
+        }
+
+        void print(String s) {
+            System.out.print(s);
+        }
+
+        void println(String s) {
+            System.out.println(s);
+        }
+    }
+
+    // Debug Function
+    static void debug(Object... o) {
+        System.err.println(Arrays.deepToString(o));
+    }
+
+    // GCD
+    static long gcd(long a, long b) {
+        if (b == 0) return a;
+        return gcd(b, a % b);
+    }
+
+    // LCM
+    static long lcm(long a, long b) {
+        return (a / gcd(a, b)) * b;
+    }
+
+    // Prime Check
+    static boolean isPrime(int n) {
+        if (n <= 1) return false;
+        if (n <= 3) return true;
+        if (n % 2 == 0 || n % 3 == 0) return false;
+        for (int i = 5; i * i <= n; i += 6) {
+            if (n % i == 0 || n % (i + 2) == 0) return false;
+        }
+        return true;
+    }
+
+    // Sieve of Eratosthenes
+    static boolean[] sieve(int n) {
+        boolean[] isPrime = new boolean[n + 1];
+        Arrays.fill(isPrime, true);
+        isPrime[0] = isPrime[1] = false;
+        for (int i = 2; i * i <= n; i++) {
+            if (isPrime[i]) {
+                for (int j = i * i; j <= n; j += i) {
+                    isPrime[j] = false;
+                }
+            }
+        }
+        return isPrime;
+    }
+
+    // Modular Exponentiation
+    static long modExp(long base, long exp, long mod) {
+        long result = 1;
+        base = base % mod;
+        while (exp > 0) {
+            if ((exp & 1) == 1) {
+                result = (result * base) % mod;
+            }
+            base = (base * base) % mod;
+            exp >>= 1;
+        }
+        return result;
+    }
+
+    // Factorial Modulo
+    static long factorialMod(int n, int mod) {
+        long result = 1;
+        for (int i = 2; i <= n; i++) {
+            result = (result * i) % mod;
+        }
+        return result;
+    }
+
+    // Custom Comparator for Sorting
+    static class Pair implements Comparable<Pair> {
+        int first, second;
+
+        public Pair(int first, int second) {
+            this.first = first;
+            this.second = second;
+        }
+
+        @Override
+        public int compareTo(Pair o) {
+            return Integer.compare(this.first, o.first); // Ascending order by first
+        }
+    }
+
+    // Prefix Sum
+    static int[] prefixSum(int[] arr) {
+        int n = arr.length;
+        int[] prefix = new int[n];
+        prefix[0] = arr[0];
+        for (int i = 1; i < n; i++) {
+            prefix[i] = prefix[i - 1] + arr[i];
+        }
+        return prefix;
+    }
+
+    // Binary Search
+    static int binarySearch(int[] arr, int target) {
+        int left = 0, right = arr.length - 1;
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            if (arr[mid] == target) return mid;
+            if (arr[mid] < target) left = mid + 1;
+            else right = mid - 1;
+        }
+        return -1; // Not found
+    }
+
+    public static void main(String[] args) {
+        Scanner sc=new Scanner(System.in);
+
+        int t = sc.nextInt(); // Number of test cases
+        while (t-- > 0) {
+            int n = sc.nextInt();
+            long arr[]=new long[n];
+            long ans[]=new long[n];
+            for(int i=0;i<n;i++){
+                arr[i]=sc.nextLong();
+                ans[i]=arr[i];
+            }
+         
+        if(n==2){
+            ans[n-2]=Math.max(0,arr[n-2]-arr[n-1]);
+            ans[1]=Math.max(0,arr[1]-arr[0]);
+        }
+        
+        if(n==3){
+            ans[n-2]=Math.max(0,arr[n-2]-(arr[n-1]+arr[0]));
+        }
+        if(n>3){
+            ans[n-2]=Math.max(0,arr[n-2]-arr[n-1]);
+            ans[1]=Math.max(0,arr[1]-arr[0]);
+        }
+        
+        
+        long maxi=Integer.MIN_VALUE;
+        for(int i=0;i<n;i++){
+            if(maxi<ans[i]){
+                maxi=ans[i];
+            }
+        }
+        System.out.println(maxi);
+        }
+    }
+    
+    
