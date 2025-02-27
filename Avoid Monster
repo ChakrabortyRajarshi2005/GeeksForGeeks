@@ -1,0 +1,696 @@
+
+Avoid Monster
+You are given a tree with 
+N
+N nodes and 
+N
+−
+1
+N−1 edges. The nodes are numbered from 
+1
+1 to 
+N
+N.
+
+You need to answer 
+Q
+Q queries. Each query consists of two distinct nodes 
+A
+A and 
+B
+B. A monster starts at node 
+A
+A and moves as follows:
+
+Every second, it moves one step toward 
+B
+B along the unique path in the tree.
+When the monster reaches 
+B
+B, it immediately turns around and moves one step per second back toward 
+A
+A.
+Once it reaches 
+A
+A, it repeats this back-and-forth movement indefinitely.
+A pair of nodes 
+(
+u
+,
+v
+)
+(u,v) is called good if you can start at node 
+u
+u and reach node 
+v
+v while following these rules:
+
+The monster does not start at node 
+u
+u.
+Each second, you can either:
+Stay at your current node.
+Move to an adjacent node.
+You cannot occupy the same node as the monster at any moment. (even if it is the node 
+v
+v).
+You and the monster cannot cross the same edge in opposite directions during the same second.
+u
+≠
+v
+u=v (i.e., 
+u
+u and 
+v
+v must be distinct nodes).
+For each query 
+(
+A
+,
+B
+)
+(A,B), find the number of good pairs 
+(
+u
+,
+v
+)
+(u,v) in the tree.
+
+Input Format
+The first line contains an integer 
+T
+T — the number of test cases.
+For each test case:
+The first line contains two integers 
+N
+N and 
+Q
+Q — the number of nodes in the tree and the number of queries, respectively.
+The next 
+N
+−
+1
+N−1 lines contain two distinct integers 
+x
+x and 
+y
+y , meaning there is an edge between nodes 
+x
+x and 
+y
+y.
+The next 
+Q
+Q lines contain two integers 
+A
+A and 
+B
+B, representing the monster's movement path.
+Output Format
+For each query, output a single integer — the number of good pairs 
+(
+u
+,
+v
+)
+(u,v) in the tree.
+
+Constraints
+1
+≤
+T
+≤
+1
+0
+4
+1≤T≤10 
+4
+ 
+2
+≤
+N
+≤
+2
+⋅
+1
+0
+5
+2≤N≤2⋅10 
+5
+ 
+1
+≤
+Q
+≤
+2
+⋅
+1
+0
+5
+1≤Q≤2⋅10 
+5
+ 
+1
+≤
+A
+,
+B
+≤
+N
+1≤A,B≤N and 
+A
+≠
+B
+A=B
+The sum of 
+N
+N over all test cases won't exceed 
+2
+⋅
+1
+0
+5
+2⋅10 
+5
+ .
+The sum of 
+Q
+Q over all test cases won't exceed 
+2
+⋅
+1
+0
+5
+2⋅10 
+5
+ .
+Sample 1:
+Input
+Output
+1
+3 2
+1 2
+1 3
+1 3
+2 3
+1
+1
+Explanation:
+In Query 1 good pairs are 
+{
+(
+2
+,
+1
+)
+}
+{(2,1)}.
+In Query 2 good pairs are 
+{
+(
+1
+,
+3
+)
+}
+{(1,3)}.
+Sample 2:
+Input
+Output
+1
+5 4
+1 2
+1 3
+1 5
+3 4
+1 3
+1 4
+2 4
+2 3
+6
+7
+10
+16
+Explanation:
+In Query 1 good pairs are 
+{
+(
+2
+,
+1
+)
+,
+(
+2
+,
+5
+)
+,
+(
+3
+,
+4
+)
+,
+(
+4
+,
+3
+)
+,
+(
+5
+,
+1
+)
+,
+(
+5
+,
+2
+)
+}
+{(2,1),(2,5),(3,4),(4,3),(5,1),(5,2)}
+In Query 2 good pairs are 
+{
+(
+2
+,
+1
+)
+,
+(
+2
+,
+3
+)
+,
+(
+2
+,
+5
+)
+,
+(
+3
+,
+4
+)
+,
+(
+5
+,
+1
+)
+,
+(
+5
+,
+2
+)
+,
+(
+5
+,
+3
+)
+}
+{(2,1),(2,3),(2,5),(3,4),(5,1),(5,2),(5,3)}
+In Query 3 good pairs are 
+{
+(
+1
+,
+2
+)
+,
+(
+1
+,
+3
+)
+,
+(
+1
+,
+4
+)
+,
+(
+1
+,
+5
+)
+,
+(
+3
+,
+4
+)
+,
+(
+4
+,
+3
+)
+,
+(
+5
+,
+1
+)
+,
+(
+5
+,
+2
+)
+,
+(
+5
+,
+3
+)
+,
+(
+5
+,
+4
+)
+}
+{(1,2),(1,3),(1,4),(1,5),(3,4),(4,3),(5,1),(5,2),(5,3),(5,4)}
+In Query 4 good pairs are 
+{
+(
+1
+,
+2
+)
+,
+(
+1
+,
+3
+)
+,
+(
+1
+,
+4
+)
+,
+(
+1
+,
+5
+)
+,
+(
+3
+,
+1
+)
+,
+(
+3
+,
+2
+)
+,
+(
+3
+,
+4
+)
+,
+(
+3
+,
+5
+)
+,
+(
+4
+,
+1
+)
+,
+(
+4
+,
+2
+)
+,
+(
+4
+,
+3
+)
+,
+(
+4
+,
+5
+)
+,
+(
+5
+,
+1
+)
+,
+(
+5
+,
+2
+)
+,
+(
+5
+,
+3
+)
+,
+(
+5
+,
+4
+)
+}
+{(1,2),(1,3),(1,4),(1,5),(3,1),(3,2),(3,4),(3,5),(4,1),(4,2),(4,3),(4,5),(5,1),(5,2),(5,3),(5,4)}
+Did you like the problem statement?
+1 user found this helpful
+More Info
+Time limit2 secs
+Memory limit1.5 GB
+Source Limit50000 Bytes
+C++
+
+}
+
+
+ 
+1
+3 2
+1 2
+1 3
+1 3
+2 3
+
+Correct Answer
+Submission ID:
+1137013461
+Time:
+1.24s#include <bits/stdc++.h>
+using namespace std;
+const int nax=2e5+10;
+const int LOGN=20;
+#define ll long long
+ll dp[nax];
+int par[nax][LOGN],val[nax],w[nax],sub[nax],dep[nax];
+bool vis[nax];
+vector<int> g[nax];
+int n,q;
+void dfs(int s)
+{
+    vis[s]=1;
+    sub[s]=1;
+    for(int i=1;i<LOGN;i++)
+    if(par[s][i-1]!=-1)
+    par[s][i]=par[par[s][i-1]][i-1];
+    for(auto it:g[s])
+    if(!vis[it])
+    {
+        dep[it]=dep[par[it][0]=s]+1;
+        val[it]+=val[s];
+        dfs(it);
+        sub[s]+=sub[it];
+    }
+}
+int get(int x,int d)
+{
+    for(int i=0;i<LOGN;i++)
+    if((d>>i)&1)
+    {
+        if(x==-1)
+        break;
+        x=par[x][i];
+    }
+    return x;
+}
+int lca(int x,int y)
+{
+    if(dep[x]<dep[y])
+    swap(x,y);
+    x=get(x,dep[x]-dep[y]);
+    if(x==y)
+    return x;
+    for(int i=LOGN-1;i>=0;i--)
+    {
+        int xx=par[x][i];
+        int yy=par[y][i];
+        if(xx!=yy)
+        {
+            x=xx;
+            y=yy;
+        }
+    }
+    return par[x][0];
+}
+int dist(int x,int y)
+{
+    return dep[x]+dep[y]-2*dep[lca(x,y)];
+}
+int dist2(int x,int y)
+{
+    return val[x]+val[y]-2*val[lca(x,y)]+(w[lca(x,y)]?1:0);
+}
+ll find(int len,int sa,int sb,int br){
+    ll ans = 0;
+    if(br == -1){
+        if(sb > 1){
+            ans = 1ll*(n-sa)*(n-sa) + 1ll*(sa-1)*(n-sb);
+        }
+        else{
+            ans = dp[len] + 1ll*(sa-1)*(n-1);
+        }
+    }
+    else{
+        if(sb > 1){
+            ans = 1ll*(n-1)*n;
+        }
+        else{
+            int left = max(len - (2*br-2),0);
+            ans = 1ll*(n-1-left)*n;
+            if(left){
+                int st = len-br;
+                int l1 = (left+1)/2;
+                int l2 = left - l1;
+                ans += 1ll*st*(st+1) - 1ll*(st-l1)*(st-l1+1)/2 - 1ll*(st-l2)*(st-l2+1)/2;
+            }
+        }
+    }
+    ans -= (n-1); //remove (u = v) pairs
+    return ans;
+}
+void solve()
+{
+    cin>>n>>q;
+    for(int i=0;i<n;i++)
+    {
+        g[i].clear();
+        vis[i]=val[i]=w[i]=0;
+        for(int j=0;j<LOGN;j++)
+        par[i][j]=-1;
+    }
+    for(int i=1;i<n;i++)
+    {
+        int u,v;
+        cin>>u>>v;
+        --u;
+        --v;
+        g[u].push_back(v);
+        g[v].push_back(u);
+    }
+    for(int i=0;i<n;i++)
+    if(g[i].size()>2)
+    {
+        val[i]=w[i]=1;
+    }
+    dfs(0);
+    while(q--)
+    {
+        int x,y;
+        cin>>x>>y;
+        --x;
+        --y;
+        int len=dist(x,y)+1;
+        int lc=lca(x,y);
+        int u,v;
+        if(lc==x)
+        {
+            v=sub[y];
+            int id=get(y,len-2);
+            u=n-sub[id];
+        }
+        else if(lc==y)
+        {
+            u=sub[x];
+            int id=get(x,len-2);
+            v=n-sub[id];
+        }
+        else
+        {
+            u=sub[x];
+            v=sub[y];
+        }
+        int id=-1;
+        if(dist2(x,y)-w[x]-w[y])
+        {
+            if(dist2(lc,y)-w[y])
+            {
+                int l=dist(x,lc);
+                int r=len-1;
+                while(r>l+1)
+                {
+                    int md=(l+r)/2;
+                    if(dist2(y,get(y,len-md-1))-w[y])
+                    l=md;
+                    else
+                    r=md;
+                }
+                id=r;
+            }
+            else
+            {
+                int l=0;
+                int r=dist(x,lc);
+                while(r-l>1)
+                {
+                    int md=(l+r)/2;
+                    if(dist2(lc,get(x,md)))
+                    l=md;
+                    else
+                    r=md;
+                }
+                id=r;
+            }
+        }
+        ll ans=find(len,u,v,id);
+        cout<<ans<<'\n';
+    }
+}
+int main() {
+	// your code goes here
+	ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+	dp[2]=1;
+	for(int i=3;i<nax;i++)
+	dp[i]=dp[i-1]+(i-2)+i/2;
+	int t;
+	cin>>t;
+	while(t--)
+	solve();
+}
