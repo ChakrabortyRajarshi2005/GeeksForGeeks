@@ -1,0 +1,124 @@
+1092. Shortest Common Supersequence 
+Solved
+Hard
+Topics
+Companies
+Hint
+Given two strings str1 and str2, return the shortest string that has both str1 and str2 as subsequences. If there are multiple valid strings, return any of them.
+
+A string s is a subsequence of string t if deleting some number of characters from t (possibly 0) results in the string s.
+
+ 
+
+Example 1:
+
+Input: str1 = "abac", str2 = "cab"
+Output: "cabac"
+Explanation: 
+str1 = "abac" is a subsequence of "cabac" because we can delete the first "c".
+str2 = "cab" is a subsequence of "cabac" because we can delete the last "ac".
+The answer provided is the shortest such string that satisfies these properties.
+Example 2:
+
+Input: str1 = "aaaaaaaa", str2 = "aaaaaaaa"
+Output: "aaaaaaaa"
+ 
+
+Constraints:
+
+1 <= str1.length, str2.length <= 1000
+str1 and str2 consist of lowercase English letters.
+class Solution {
+
+    public String shortestCommonSupersequence(String str1, String str2) {
+        // Base case: both strings are empty
+        if (str1.isEmpty() && str2.isEmpty()) {
+            return "";
+        }
+
+        // Base case: one string is empty, append the other string
+        if (str1.isEmpty()) {
+            return str2;
+        }
+
+        if (str2.isEmpty()) {
+            return str1;
+        }
+
+        // If the first characters match, include it in the supersequence
+        if (str1.charAt(0) == str2.charAt(0)) {
+            return (
+                str1.charAt(0) +
+                shortestCommonSupersequence(
+                    str1.substring(1),
+                    str2.substring(1)
+                )
+            );
+        } else {
+            // Try both options: picking from str1 or str2, and choose the shorter one
+            String pickStr1 =
+                str1.charAt(0) +
+                shortestCommonSupersequence(str1.substring(1), str2);
+            String pickStr2 =
+                str2.charAt(0) +
+                shortestCommonSupersequence(str1, str2.substring(1));
+
+            return (pickStr1.length() < pickStr2.length())
+                ? pickStr1
+                : pickStr2;
+        }
+    }
+}
+
+
+
+class Solution {
+
+    public String shortestCommonSupersequence(String str1, String str2) {
+        Map<String, String> memo = new HashMap<>();
+        return helper(str1, str2, memo);
+    }
+
+    private String helper(String str1, String str2, Map<String, String> memo) {
+        String memoKey = str1 + " " + str2;
+
+        // Check if result is already computed
+        if (memo.containsKey(memoKey)) {
+            return memo.get(memoKey);
+        }
+
+        // Base case: both strings are empty
+        if (str1.isEmpty() && str2.isEmpty()) {
+            return "";
+        }
+
+        // Base case: one string is empty, append the other string
+        if (str1.isEmpty()) {
+            return str2;
+        }
+        if (str2.isEmpty()) {
+            return str1;
+        }
+
+        // If the first characters match, include it in the supersequence
+        if (str1.charAt(0) == str2.charAt(0)) {
+            String result =
+                str1.charAt(0) +
+                helper(str1.substring(1), str2.substring(1), memo);
+            memo.put(memoKey, result);
+            return result;
+        }
+
+        // Try both options: picking from str1 or str2, and choose the shorter one
+        String pickStr1 =
+            str1.charAt(0) + helper(str1.substring(1), str2, memo);
+        String pickStr2 =
+            str2.charAt(0) + helper(str1, str2.substring(1), memo);
+
+        String result = (pickStr1.length() < pickStr2.length())
+            ? pickStr1
+            : pickStr2;
+        memo.put(memoKey, result);
+        return result;
+    }
+}
