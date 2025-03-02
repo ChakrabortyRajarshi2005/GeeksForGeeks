@@ -1,0 +1,570 @@
+
+#include <bits/stdc++.h>
+The Skip Game
+You are given 
+N
+N cards numbered from 
+1
+1 to 
+N
+N and 
+N
+N players, each also numbered from 
+1
+1 to 
+N
+N. The players are playing a deck-based game, which follows two key sequences:
+
+Permutation 
+A
+A: This decides the order in which players take their turns.
+Permutation 
+B
+B: This represents the order of the deck of cards.
+The game is played as follows:
+
+Players take their turns sequentially in the order given by 
+A
+A (i.e. from 
+A
+1
+A 
+1
+​
+  to 
+A
+N
+A 
+N
+​
+ ).
+Initially, the deck is arranged according to 
+B
+B.
+On the 
+i
+t
+h
+i 
+th
+​
+  turn, player 
+A
+i
+A 
+i
+​
+  acts as follows:
+Skip: If the top card equals 
+A
+i
+A 
+i
+​
+ , the player skips their move and the deck remains unchanged.
+Removal: Otherwise, the top card is removed from the deck (so that the deck shrinks and the next card becomes the new top card).
+Each player takes exactly one turn. After all 
+N
+N players have taken their turns, the game comes to an end. 
+F
+(
+A
+,
+B
+)
+F(A,B) represents the total number of skipped moves during the game.
+Some positions in 
+A
+A are already fixed, meaning they are assigned specific numbers between 
+1
+1 and 
+N
+N. The remaining positions are marked as 
+−
+1
+−1 and must be filled with the unused numbers to complete the permutation.
+
+Given an integer 
+K
+K, count the number of valid pairs 
+(
+A
+,
+B
+)
+(A,B) such that 
+F
+(
+A
+,
+B
+)
+=
+K
+F(A,B)=K. Since the answer may be large, report it modulo 
+1
+0
+9
++
+7
+10 
+9
+ +7.
+
+Here, 
+A
+A must be a complete permutation of 
+(
+1
+,
+2
+,
+.
+.
+.
+,
+N
+)
+(1,2,...,N) that respects the fixed positions, and 
+B
+B can be any permutation of 
+(
+1
+,
+2
+,
+.
+.
+.
+,
+N
+)
+(1,2,...,N).
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of two lines of input.
+The first line of each test case contains 
+N
+N and 
+K
+K — the number of players/cards and the required number of skips.
+The second line of each test case contains 
+N
+N space-separated integers 
+A
+1
+,
+A
+2
+,
+…
+,
+A
+N
+A 
+1
+​
+ ,A 
+2
+​
+ ,…,A 
+N
+​
+  denoting the order in which players take their turns.
+If 
+A
+i
+A 
+i
+​
+  is a number between 
+1
+1 and 
+N
+N, it means that the 
+i
+i-th position in 
+A
+A is fixed. Additionally, no fixed number appears more than once in 
+A
+A.
+If 
+A
+i
+=
+−
+1
+A 
+i
+​
+ =−1, it means that this position is not fixed and must be filled with one of the remaining unused numbers to form a valid permutation.
+Output Format
+For each test case, output on a new line the number of valid pairs 
+(
+A
+,
+B
+)
+(A,B) such that 
+F
+(
+A
+,
+B
+)
+=
+K
+F(A,B)=K. Since the answer may be large, report it modulo 
+1
+0
+9
++
+7
+10 
+9
+ +7.
+
+Constraints
+1
+≤
+T
+≤
+1
+0
+5
+1≤T≤10 
+5
+ 
+1
+≤
+N
+≤
+2
+⋅
+1
+0
+5
+1≤N≤2⋅10 
+5
+ 
+0
+≤
+K
+≤
+N
+0≤K≤N
+−
+1
+≤
+A
+i
+≤
+N
+−1≤A 
+i
+​
+ ≤N and 
+A
+i
+≠
+0
+A 
+i
+​
+ =0
+The sum of 
+N
+N over all test cases won't exceed 
+4
+⋅
+1
+0
+5
+4⋅10 
+5
+ .
+Sample 1:
+Input
+Output
+4
+1 0
+-1
+1 1
+1
+2 1
+1 2
+3 2
+-1 -1 2
+0
+1
+1
+2
+Explanation:
+Test Case 1:
+When 
+N
+=
+1
+N=1, the only possible 
+A
+A is 
+[
+1
+]
+[1]. This configuration results in one skip, meaning that 
+F
+(
+A
+,
+B
+)
+F(A,B) cannot be 
+0
+0. Therefore, it's impossible to achieve 
+F
+(
+A
+,
+B
+)
+=
+0
+F(A,B)=0 when 
+N
+=
+1
+N=1.
+
+Test Case 3:
+Consider 
+A
+=
+[
+1
+,
+2
+]
+A=[1,2]. There are two possible arrays 
+B
+B:
+
+Case 1: 
+B
+=
+[
+1
+,
+2
+]
+B=[1,2]
+
+Turn 1: 
+A
+1
+A 
+1
+​
+  matches the top card, so a skip occurs.
+Turn 2: 
+A
+2
+A 
+2
+​
+  does not match the new top card (which is 
+1
+1), so Player 
+2
+2 removes that card.
+Result: Total skips = 
+1
+1, so 
+F
+(
+A
+,
+B
+)
+=
+1
+F(A,B)=1 .
+Case 2: 
+B
+=
+[
+2
+,
+1
+]
+B=[2,1]
+
+Turn 1: 
+A
+1
+A 
+1
+​
+  does not match the top card (which is 
+2
+2), so Player 
+1
+1 removes that card.
+Turn 2: 
+A
+2
+A 
+2
+​
+  does not match the new top card (which is 
+1
+1), so Player 
+2
+2 removes that card.
+Result: Total skips = 
+0
+0, so 
+F
+(
+A
+,
+B
+)
+=
+0
+F(A,B)=0.
+Thus, there is exactly 
+1
+1 valid pair 
+(
+A
+,
+B
+)
+(A,B) that results in 
+F
+(
+A
+,
+B
+)
+=
+1
+F(A,B)=1.using namespace std;
+
+#define endl '\n'
+#define ll long long
+#define pii pair<int, int>
+#define fi first
+#define se second
+
+const int N = 2e5 + 100;
+const int mod = 1e9 + 7;
+
+using u32 = unsigned;
+using i64 = long long;
+using u64 = unsigned long long;
+using i128 = __int128;
+using u128 = unsigned __int128;
+
+#define sz(x) int(x.size())
+#define all(x) x.begin(), x.end()
+namespace IO {
+    // Input
+    template <class S, class T>
+    auto &operator>>(istream &ist, pair<S, T> &d) {
+        ist >> d.first >> d.second;
+        return ist;
+    }
+    template <class X, class Y, class Z>
+    auto &operator>>(istream &ist, tuple<X, Y, Z> &d) {
+        auto &[x, y, z] = d;
+        ist >> x >> y >> z;
+        return ist;
+    }
+    template <class T>
+    auto &operator>>(istream &ist, vector<T> &d) {
+        for (auto &e : d)
+            ist >> e;
+        return ist;
+    }
+    template <class T, size_t S>
+    auto &operator>>(istream &ist, array<T, S> &d) {
+        for (auto &e : d)
+            ist >> e;
+        return ist;
+    }
+    template <class T>
+
+    // Output
+    auto &operator<<(ostream &ost, vector<T> &d) {
+        for (auto it = d.begin(); it != d.end(); it++) {
+            if (it + 1 == d.end())
+                ost << *it;
+            else
+                ost << *it << ' ';
+        }
+        return ost;
+    }
+}
+using namespace IO;
+
+namespace Combination {
+    int fac[N], rfac[N], inv[N];
+    void init() {
+        fac[0] = rfac[0] = fac[1] = rfac[1] = inv[1] = 1;
+        for (int i = 2; i < N; i++) {
+            inv[i] = 1ll * inv[mod % i] * (mod - mod / i) % mod;
+            fac[i] = (1ll * fac[i - 1] * i) % mod;
+            rfac[i] = 1ll * rfac[i - 1] * inv[i] % mod;
+        }
+    }
+    int CC(int n, int m) {
+        return 1ll * fac[n] * rfac[m] % mod * rfac[n - m] % mod;
+    }
+}
+using namespace Combination;
+
+int n, k;
+
+void main_code() {
+    ll cnt = 0, ans1 = 0, ans2 = 0, ans;
+    cin >> n >> k;
+    vector<int> a(n);
+    for (int i = 0; i < n; i++) {
+        cin >> a[i];
+        if (a[i] == -1)
+            cnt++;
+    }
+    for (int i = 0; i <= n - 2 * k; i++) {
+        ans1 += (i & 1 ? -1ll : 1ll) * CC(n - 2 * k, i) * fac[n - k - i] % mod;
+        ans1 += mod;
+        ans1 %= mod;
+    }
+    ans1 = 1ll * ans1 * CC(n - k, k) % mod;
+    for (int i = 0; i <= n - 2 * k + 1; i++) {
+        ans2 += (i & 1 ? -1ll : 1ll) * CC(n - 2 * k + 1, i) * fac[n - k - i] % mod;
+        ans2 += mod;
+        ans2 %= mod;
+    }
+    ans2 = 1ll * ans2 * CC(n - k, k - 1) % mod;
+    ans = 1ll * fac[cnt] * (ans1 + ans2) % mod;
+    cout << ans << '\n';
+}
+
+int main() {
+    ios::sync_with_stdio(0);
+    cin.tie(0), cout.tie(0);
+
+    init();
+
+    int tcase;
+    cin >> tcase;
+    while (tcase--) {
+        main_code();
+    }
+
+    return 0;
+}
