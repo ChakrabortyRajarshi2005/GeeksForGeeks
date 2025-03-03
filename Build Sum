@@ -1,0 +1,577 @@
+Build Sum
+You are given three integers 
+X
+1
+X 
+1
+​
+ , 
+X
+2
+X 
+2
+​
+ , and 
+X
+3
+X 
+3
+​
+ . You are allowed to perform the following operation any number of times on them:
+
+Choose a non-negative integer 
+Y
+Y such that 
+0
+≤
+Y
+<
+1
+0
+18
+0≤Y<10 
+18
+ .
+Select two distinct indices 
+i
+i and 
+j
+j from 
+(
+1
+,
+2
+,
+3
+)
+(1,2,3).
+Update the numbers as follows: 
+X
+i
+←
+X
+i
+⊕
+Y
+X 
+i
+​
+ ←X 
+i
+​
+ ⊕Y and 
+X
+j
+←
+X
+j
+⊕
+Y
+X 
+j
+​
+ ←X 
+j
+​
+ ⊕Y.
+where 
+⊕
+⊕ denotes the bitwise XOR operation.
+
+Your goal is to transform the three numbers so that: 
+X
+1
++
+X
+2
+=
+X
+3
+X 
+1
+​
+ +X 
+2
+​
+ =X 
+3
+​
+ .
+
+Determine the minimum number of operations required to achieve this condition. If it is impossible to satisfy the condition, print 
+−
+1
+−1.
+
+Additionally, if it is possible, you are required to output the sequence of operations used to reach the goal. If multiple sequences of operations achieve the target in the minimum number of moves, you may output any one of them.
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of one line of input containing three numbers 
+X
+1
+X 
+1
+​
+ , 
+X
+2
+X 
+2
+​
+  and 
+X
+3
+X 
+3
+​
+ .
+Output Format
+For each test case:
+
+If it is impossible to achieve the goal, output a single line containing the integer 
+−
+1
+−1.
+Otherwise, first output a single line containing a single integer 
+N
+N - the minimum number of operations required. Then output 
+N
+N lines, each containing 
+3
+3 spaced integers 
+i
+i, 
+j
+j and 
+Y
+Y - representing an operation where:
+i
+i and 
+j
+j with 
+i
+≠
+j
+i=j are the indices of the two numbers on which the operation is performed.
+Y
+Y is the chosen non-negative integer satisfying 
+0
+≤
+Y
+<
+1
+0
+18
+0≤Y<10 
+18
+ .
+Constraints
+1
+≤
+T
+≤
+2
+⋅
+1
+0
+5
+1≤T≤2⋅10 
+5
+ 
+0
+≤
+X
+1
+,
+X
+2
+,
+X
+3
+≤
+1
+0
+9
+0≤X 
+1
+​
+ ,X 
+2
+​
+ ,X 
+3
+​
+ ≤10 
+9
+ 
+Sample 1:
+Input
+Output
+3
+3 2 1
+5 6 11
+5 5 7
+1
+1 2 3
+0
+-1
+Explanation:
+Test Case 1:
+Suppose we choose indices 
+1
+1 and 
+2
+2 of our operation and 
+Y
+=
+3
+Y=3, the values transform as follows:
+
+X
+1
+X 
+1
+​
+  becomes 
+X
+1
+⊕
+3
+=
+0
+X 
+1
+​
+ ⊕3=0
+X
+2
+X 
+2
+​
+  becomes 
+X
+2
+⊕
+3
+=
+1
+X 
+2
+​
+ ⊕3=1
+X
+3
+X 
+3
+​
+  remains unchanged at 
+1
+1
+After this operation, the tuple becomes (
+0
+,
+1
+,
+1
+0,1,1), which satisfies the condition 
+0
++
+1
+=
+1
+0+1=1. Hence, the goal is achieved in one operation.
+Test Case 2:
+In this case, the initial values already satisfy the condition 
+X
+1
++
+X
+2
+=
+X
+3
+X 
+1
+​
+ +X 
+2
+​
+ =X 
+3
+​
+ . Therefore, no operations are required.
+
+Test Case 3:
+For this test case, it can be proven that no matter how many operations you perform, you cannot achieve the condition 
+X
+1
++
+X
+2
+=
+X
+3
+X 
+1
+​
+ +X 
+2
+​
+ =X 
+3
+​
+ . Thus, it is impossible to satisfy the goal.
+#line 1 "/home/y_midori/cp/test/a.cpp"
+
+// #include "graph/graph-template.hpp"
+
+#line 2 "template.hpp"
+// #pragma GCC target("avx2")
+// #pragma GCC optimize("O3")
+// #pragma GCC optimize("unroll-loops")
+
+#include <bits/stdc++.h>
+using namespace std;
+// https://xn--kst.jp/blog/2019/08/29/cpp-comp/
+// debug methods
+// usage: debug(x,y);
+// vector 出力できるように修正
+template <typename T>
+ostream& debug_print(ostream& os, const vector<T>& v) {
+    os << "[";
+    for (size_t i = 0; i < v.size(); ++i) {
+        os << v[i];
+        if (i < v.size() - 1) os << ", ";
+    }
+    os << "]";
+    return os;
+}
+template <typename T>
+ostream& debug_print(ostream& os, const T& var) {
+    os << var;
+    return os;
+}
+#define CHOOSE(a) CHOOSE2 a
+#define CHOOSE2(a0, a1, a2, a3, a4, x, ...) x
+#define debug_1(x1) { cout << #x1 << ": "; debug_print(cout, x1) << endl; }
+#define debug_2(x1, x2) { cout << #x1 << ": "; debug_print(cout, x1) << ", " << #x2 << ": "; debug_print(cout, x2) << endl; }
+#define debug_3(x1, x2, x3) { cout << #x1 << ": "; debug_print(cout, x1) << ", " << #x2 << ": "; debug_print(cout, x2) << ", " << #x3 << ": "; debug_print(cout, x3) << endl; }
+#define debug_4(x1, x2, x3, x4) { cout << #x1 << ": "; debug_print(cout, x1) << ", " << #x2 << ": "; debug_print(cout, x2) << ", " << #x3 << ": "; debug_print(cout, x3) << ", " << #x4 << ": "; debug_print(cout, x4) << endl; }
+#define debug_5(x1, x2, x3, x4, x5) { cout << #x1 << ": "; debug_print(cout, x1) << ", " << #x2 << ": "; debug_print(cout, x2) << ", " << #x3 << ": "; debug_print(cout, x3) << ", " << #x4 << ": "; debug_print(cout, x4) << ", " << #x5 << ": "; debug_print(cout, x5) << endl; }
+
+#ifdef LOCAL
+#define debug(...) CHOOSE((__VA_ARGS__, debug_5, debug_4, debug_3, debug_2, debug_1, ~))(__VA_ARGS__)
+#else
+#define debug(...)
+#endif
+
+using ll = long long;
+using vl = vector<ll>;
+using vll = vector<vl>;
+using P = pair<ll, ll>;
+#define all(v) v.begin(), v.end()
+template <typename T> inline bool chmax(T &a, T b) {
+    return ((a < b) ? (a = b, true) : (false));
+}
+template <typename T> inline bool chmin(T &a, T b) {
+    return ((a > b) ? (a = b, true) : (false));
+}
+#define rep1(i, n) for(ll i = 1; i <= ((ll)n); ++i)
+// https://trap.jp/post/1224/
+template <class... T> constexpr auto min(T... a) {
+    return min(initializer_list<common_type_t<T...>>{a...});
+}
+template <class... T> constexpr auto max(T... a) {
+    return max(initializer_list<common_type_t<T...>>{a...});
+}
+template <class... T> void input(T &...a) { (cin >> ... >> a); }
+template <class T> void input(vector<T> &a) {
+    for(T &x : a)
+        cin >> x;
+}
+void print() { cout << '\n'; }
+template <class T, class... Ts> void print(const T &a, const Ts &...b) {
+    cout << a;
+    (cout << ... << (cout << ' ', b));
+    cout << '\n';
+}
+void print(const string &s) {
+    cout << s << '\n';
+}
+template <class Container, typename = void>
+struct is_container : std::false_type {};
+template <class Container>
+struct is_container<Container, std::void_t<decltype(std::declval<Container>().begin()), decltype(std::declval<Container>().end())>> : std::true_type {};
+template <class Container>
+typename enable_if<is_container<Container>::value>::type print(const Container& x) {
+    if (!x.empty()) {
+        auto it = x.begin();
+        for (; it != prev(x.end()); ++it) {
+            cout << *it << " ";
+        }
+        cout << *it << "\n";  // 最後の要素を出力して改行
+    }
+}
+#define INT(...)                                                               \
+    int __VA_ARGS__;                                                           \
+    input(__VA_ARGS__)
+#define LL(...)                                                                \
+    long long __VA_ARGS__;                                                     \
+    input(__VA_ARGS__)
+#define STR(...)                                                               \
+    string __VA_ARGS__;                                                        \
+    input(__VA_ARGS__)
+#define REP1(a) for(ll i = 0; i < a; i++)
+#define REP2(i, a) for(ll i = 0; i < a; i++)
+#define REP3(i, a, b) for(ll i = a; i < b; i++)
+#define REP4(i, a, b, c) for(ll i = a; i < b; i += c)
+#define overload4(a, b, c, d, e, ...) e
+#define rep(...) overload4(__VA_ARGS__, REP4, REP3, REP2, REP1)(__VA_ARGS__)
+
+ll inf = 3e18;
+vl dx = {1, -1, 0, 0};
+vl dy = {0, 0, 1, -1};
+#line 3 "/home/y_midori/cp/test/a.cpp"
+void solve() {
+    LL(x, y, z);
+    ll ox, oy, oz;
+    ox = x, oy = y, oz = z;
+    if(x + y == z) {
+        print(0);
+        return;
+    }
+    ll bs = 31;
+    // x,y
+    {
+        ll ans = 0;
+        ll cur = 0;
+        rep(i, bs) {
+            if(1 & ((x ^ y) >> i)) {
+                cur |= 1 << i;
+            } else if(1 & (x >> i)) {
+                ans |= 1 << i;
+            }
+        }
+        ll rem = z - cur;
+        bool flag = true;
+        if(rem < 0 or rem & 1)
+            flag = false;
+        rep(i, 1, bs) {
+            if((rem >> i) & 1) {
+                if(1 & ((x ^ y) >> (i - 1))) {
+                    flag = false;
+                    break;
+                }
+                ans ^= 1 << (i - 1);
+            }
+        }
+        if(flag) {
+            print(1);
+            print(1, 2, ans);
+            return;
+        }
+    }
+    // x,z/y,z
+    rep(_, 2) {
+        ll ans = 0;
+        ll cur = 0;
+        rep(i, bs) {
+            if(1 & ((x ^ z) >> i)) {
+                if((z >> i) & 1)
+                    ans |= 1 << i;
+                cur -= 1 << i;
+            }
+        }
+        ll rem = y - cur;
+        bool flag = true;
+        if(rem < 0 or rem & 1)
+            flag = false;
+        rep(i, 1, bs) {
+            if((rem >> i) & 1) {
+                if(1 & ~((x ^ z) >> (i - 1))) {
+                    flag = false;
+                    break;
+                }
+                ans ^= 1 << (i - 1);
+            }
+        }
+        if(flag) {
+            print(1);
+            print(_ + 1, 3, ans);
+            return;
+        }
+        swap(x, y);
+    }
+    // (x,y),(x,z)
+    {
+        assert(x == ox and y == oy and z == oz);
+        ll c = 0, b = 0;
+        ll rem = 0;
+        rep(i, bs) {
+            ll s = (x >> i) & 1, t = (y >> i) & 1, u = (z >> i) & 1;
+            ll l = s + t - u;
+            // debug(i, l);
+            if(l == -1 or l == 0) {
+            } else {
+                l -= 2;
+                if(s and t) {
+                    x ^= 1 << i;
+                    y ^= 1 << i;
+                    c |= 1 << i;
+                } else if(s) {
+                    x ^= 1 << i;
+                    z ^= 1 << i;
+                    b |= 1 << i;
+                } else {
+                    assert(!s and t and !u);
+                    // (0,1,0)
+                    y ^= 1 << i;
+                    z ^= 1 << i;
+                    b |= 1 << i;
+                    c |= 1 << i;
+                }
+            }
+            rem += abs(l) * (1 << i);
+        }
+        debug(rem, x, y, z);
+        debug(b, c);
+        if(rem & 1) {
+            print(-1);
+            return;
+        }
+        rep(i, 1, bs) {
+            if((~rem >> i) & 1)
+                continue;
+            ll s = (x >> (i - 1)) & 1, t = (y >> (i - 1)) & 1,
+               u = (z >> (i - 1)) & 1;
+            assert(s + t - u <= 0);
+            if(s == 0) {
+                if(t == 0) {
+                    c ^= 1 << (i - 1);
+                } else {
+                    b ^= 1 << (i - 1);
+                }
+            } else {
+                c ^= 1 << (i - 1);
+                b ^= 1 << (i - 1);
+            }
+        }
+        print(2);
+        print(1, 3, b);
+        print(1, 2, c);
+        ox ^= b ^ c, oy ^= c, oz ^= b;
+        debug(ox, oy, oz);
+    }
+}
+int main() {
+    ios::sync_with_stdio(false);
+    std::cin.tie(nullptr);
+    ll t = 1;
+    cin >> t;
+    rep(_, t) {
+        solve();
+    }
+}
