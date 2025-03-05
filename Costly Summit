@@ -1,0 +1,304 @@
+
+Costly Summit
+Chef is going to meet 
+N
+N people. Each person speaks one of the five languages: 
+A
+A, 
+B
+B, 
+C
+C, 
+D
+D, or 
+E
+E. Chef does not know any language at the start. To communicate, he has two options:
+
+Chef can learn a language for a fixed cost 
+C
+C. Once he learns a language, he can talk with everyone who speaks that language.
+Chef can hire a translator to help him. The cost of hiring a translator goes up each time he uses one, no matter which language it is. For example, his first use costs 
+1
+1 unit, his second use costs 
+2
+2 units, his third use costs 
+3
+3 units, and so on. So if he has already used a translator three times, the next time will cost him 
+4
+4 units.
+You are given a string 
+S
+S of length 
+N
+N where 
+S
+i
+S 
+i
+​
+  represents the language spoken by the 
+i
+t
+h
+i 
+th
+​
+  person. Your task is to find the minimum total cost for Chef to talk with all 
+N
+N people.
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of two lines of input.
+The first line of each test case contains two space-separated integers 
+N
+N and 
+C
+C — the number of people and the cost to learn any language, respectively.
+The second line contains a string 
+S
+S of length 
+N
+N where each character is one of 
+A
+A, 
+B
+B, 
+C
+C, 
+D
+D, or 
+E
+E. 
+S
+i
+S 
+i
+​
+  is the language spoken by the 
+i
+t
+h
+i 
+th
+​
+  person.
+Output Format
+For each test case, output on a new line the minimum total cost for Chef to talk with all 
+N
+N people.
+
+Constraints
+1
+≤
+T
+≤
+1
+0
+5
+1≤T≤10 
+5
+ 
+1
+≤
+N
+,
+C
+≤
+10
+1≤N,C≤10
+The sum of 
+N
+N over all test cases won't exceed 
+2
+⋅
+1
+0
+5
+2⋅10 
+5
+ .
+Sample 1:
+Input
+Output
+4
+3 10
+AAA
+3 2
+ABC
+2 3
+AB
+5 4
+DCBAE
+6
+5
+3
+14
+Explanation:
+Test Case 1: Chef needs to meet 
+3
+3 people who all speak language 
+A
+A, and he can either learn language 
+A
+A for 
+10
+10 units or use a translator for each conversation with incremental costs of 
+1
+1, 
+2
+2, and 
+3
+3 units respectively. Using translators, the total cost adds up to 
+6
+6, which is lower than the fixed cost of 
+10
+10, so the minimum cost is 
+6
+6.
+
+Test Case 2: 
+3
+3 people speaking 
+A
+A, 
+B
+B, and 
+C
+C and a learning cost of 
+2
+2, if Chef uses translators for all three, the cost would be 
+1
++
+2
++
+3
+=
+6
+1+2+3=6. However, if he learns one language (say 
+A
+A) for 
+2
+2 units and then uses translators for the remaining two people (costing 
+1
+1 and 
+2
+2 units), the total comes to 
+2
++
+3
+=
+5
+2+3=5, which is optimal. It can be proven that the above strategy results in the minimum possible cost.
+
+Test Case 3: 
+2
+2 people speaking 
+A
+A and 
+B
+B with a learning cost of 
+3
+3. Using translators for both results in a cost of 
+1
++
+2
+=
+3
+1+2=3, which is as good as any mixed strategy (for instance, learning one language and translating for the other would exceed 
+3
+3), so the minimum cost is 
+3
+3.
+
+Test Case 4: Chef meets 
+5
+5 people speaking 
+D
+D, 
+C
+C, 
+B
+B, 
+A
+A, and 
+E
+E with a learning cost of 
+4
+4. If he relies solely on translators, the total cost would be 
+1
++
+2
++
+3
++
+4
++
+5
+=
+15
+1+2+3+4+5=15. Alternatively, if he learns one language (for example, 
+A
+A) for 
+4
+4 units and translates for the other four people with costs of 
+1
+1, 
+2
+2, 
+3
+3, and 
+4
+4, the total cost is 
+4
++
+10
+=
+14
+4+10=14. It can be proven that the above strategy results in the minimum possible cost.#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+int main() {
+    int T;
+    cin >> T;
+
+    while (T--) {
+        int N, C;
+        cin >> N >> C;
+        string S;
+        cin >> S;
+
+        vector<int> cnt(5, 0);
+        for (char ch : S) {
+            cnt[ch - 'A']++;
+        }
+
+        int min_cost = 1e9;
+
+        for (int mask = 0; mask < (1 << 5); mask++) {
+            int cost = 0;
+            int learned = 0;
+
+            for (int i = 0; i < 5; i++) {
+                if (mask & (1 << i)) {
+                    cost += C;
+                    learned += cnt[i];
+                }
+            }
+
+            int others = N - learned;
+            int translator_cost = others * (others + 1) / 2;
+            cost += translator_cost;
+
+            min_cost = min(min_cost, cost);
+        }
+
+        cout << min_cost << endl;
+    }
+
+    return 0;
+}
