@@ -1,0 +1,52 @@
+Longest Common Subsequence
+Difficulty: MediumAccuracy: 41.68%Submissions: 304K+Points: 4
+Given two strings s1 and s2, return the length of their longest common subsequence (LCS). If there is no common subsequence, return 0.
+
+A subsequence is a sequence that can be derived from the given string by deleting some or no elements without changing the order of the remaining elements. For example, "ABE" is a subsequence of "ABCDE".
+
+Examples:
+
+Input: s1 = "ABCDGH", s2 = "AEDFHR"
+Output: 3
+Explanation: The longest common subsequence of "ABCDGH" and "AEDFHR" is "ADH", which has a length of 3.
+Input: s1 = "ABC", s2 = "AC"
+Output: 2
+Explanation: The longest common subsequence of "ABC" and "AC" is "AC", which has a length of 2.
+Input: s1 = "XYZW", s2 = "XYWZ"
+Output: 3
+Explanation: The longest common subsequences of "XYZW" and "XYWZ" are "XYZ" and "XYW", both of length 3.
+Constraints:
+1<= s1.size(), s2.size() <=103
+Both strings s1 and s2 contain only uppercase English letters.
+
+
+class Solution {
+  public:
+  
+  vector<vector<int>> dp; // Memoization table
+
+    int abc(string &s1, string &s2, int i, int j) {
+        
+        if (i < 0 || j < 0) return 0;
+
+        if (dp[i][j] != -1) return dp[i][j];
+
+        
+        if (s1[i] == s2[j]) {
+            return dp[i][j] = 1 + abc(s1, s2, i - 1, j - 1);
+        } 
+        
+        else {
+            return dp[i][j] = max(abc(s1, s2, i - 1, j), abc(s1, s2, i, j - 1));
+        }
+    }
+  
+  
+    int lcs(string &s1, string &s2) {
+        // code here
+        int m = s1.size(), n = s2.size();
+        dp.assign(m, vector<int>(n, -1)); 
+        return abc(s1, s2, m - 1, n - 1);
+       
+    }
+};
