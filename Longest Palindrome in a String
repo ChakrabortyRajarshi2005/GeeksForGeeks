@@ -1,0 +1,92 @@
+Longest Palindrome in a String
+Difficulty: MediumAccuracy: 23.2%Submissions: 322K+Points: 4
+Given a string s, your task is to find the longest palindromic substring within s.
+
+A substring is a contiguous sequence of characters within a string, defined as s[i...j] where 0 ≤ i ≤ j < len(s).
+
+A palindrome is a string that reads the same forward and backward. More formally, s is a palindrome if reverse(s) == s.
+
+Note: If there are multiple palindromic substrings with the same length, return the first occurrence of the longest palindromic substring from left to right.
+
+Examples :
+
+Input: s = “forgeeksskeegfor” 
+Output: “geeksskeeg”
+Explanation: There are several possible palindromic substrings like “kssk”, “ss”, “eeksskee” etc. But the substring “geeksskeeg” is the longest among all.
+Input: s = “Geeks” 
+Output: “ee”
+Explanation: "ee" is the longest palindromic substring of "Geeks". 
+Input: s = “abc” 
+Output: “a”
+Explanation: "a", "b" and "c" are longest palindromic substrings of same length. So, the first occurrence is returned.
+Constraints:
+1 ≤ s.size() ≤ 103
+s consist of only lowercase English letters.
+
+
+class Solution {
+  public:
+    string longestPalindrome(string &S) {
+        // code here
+        // int start = 0;
+        // int end = 0;
+        // int low,high;
+        // int n = s.size();
+        // for(int i=0;i<n;i++){
+        //     // odd part 
+        //     low = i;
+        //     high = i;
+        //     while(low>=0 && high<n && s[low] == s[high]){
+        //         if(high - low + 1 > high){
+        //             end = high - low + 1;
+        //             start = low;
+        //         }
+        //         low--;
+        //         high++;
+        //     }
+        //     // even part
+        //     low = i;
+        //     high = i+1;
+        //     while(low>=0 && high < n && s[low] == s[high]){
+        //         if(high - low + 1 > end){
+        //             end = high - low + 1;
+        //             start = low;
+        //         }
+        //         low--;
+        //         high++;
+        //     }
+        // }
+        // return s.substr(start,end);
+        int start = 0, end = 0;
+    int low,high;
+    for(int i = 0; i < S.length(); i++){
+        // odd part
+         low = i - 1;
+         high = i;
+        while(low>=0 && high<S.length() && S[low] == S[high]){
+            
+            if(high - low + 1 > end){
+                end = high - low + 1; //current longest pallindrome length
+                start = low;
+            }
+            low--;
+            high++;
+        }
+        // Even part
+         low = i - 1;
+         high = i + 1;
+        while(low>=0 && high<S.length() && S[low] == S[high]){
+            
+            if(high - low + 1 > end){
+                end = high - low + 1; //current longest pallindrome length
+                start = low;
+            }
+            low--;
+            high++;
+        }
+        
+    }
+    if(end == 0)return S.substr(start,1); // no pallindrome at all
+    return S.substr(start,end);
+    }
+};
