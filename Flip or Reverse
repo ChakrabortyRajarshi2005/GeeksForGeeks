@@ -1,0 +1,311 @@
+Flip or Reverse
+You are given a binary string 
+A
+A and want to convert it to another binary string 
+B
+B. Both have lengths 
+N
+N.
+
+You can do either of the following operations at most 
+⌈
+N
+2
+⌉
+⌈ 
+2
+N
+​
+ ⌉ times:
+
+Type 
+1
+1: Choose 
+(
+L
+,
+R
+)
+(L,R) such that 
+1
+≤
+L
+≤
+R
+≤
+N
+1≤L≤R≤N, and flip 
+A
+i
+A 
+i
+​
+  for each 
+L
+≤
+i
+≤
+R
+L≤i≤R. To flip 
+X
+X means to replace it with 
+1
+−
+X
+1−X.
+
+Type 
+2
+2: Choose 
+(
+L
+,
+R
+)
+(L,R) such that 
+1
+≤
+L
+≤
+R
+≤
+N
+1≤L≤R≤N, and reverse the subarray 
+A
+[
+L
+,
+R
+]
+A[L,R]. Formally, simultaneously replace 
+A
+i
+A 
+i
+​
+  with 
+A
+L
++
+R
+−
+i
+A 
+L+R−i
+​
+  for all 
+L
+≤
+i
+≤
+R
+L≤i≤R.
+
+Find a sequence of operations of length at most 
+⌈
+N
+2
+⌉
+⌈ 
+2
+N
+​
+ ⌉ to transform 
+A
+A to 
+B
+B. It can be proven that at least one valid sequence exists.
+
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of multiple lines of input.
+The first line of each test case contains the value of 
+N
+N.
+The second line contains the binary string 
+A
+A.
+The third line contains the binary string 
+B
+B.
+Output Format
+For each test case, output the following:
+
+First, 
+K
+K (
+0
+≤
+K
+≤
+⌈
+N
+2
+⌉
+0≤K≤⌈ 
+2
+N
+​
+ ⌉) the number of operations you will perform.
+Now output 
+K
+K lines, each with 
+3
+3 integers: type, 
+L
+L and 
+R
+R (
+1
+≤
+t
+y
+p
+e
+≤
+2
+,
+1
+≤
+L
+≤
+R
+≤
+N
+1≤type≤2,1≤L≤R≤N), representing the type and range of the operation performed.
+If multiple answers are possible, all will be accepted.
+
+Constraints
+1
+≤
+T
+≤
+500
+1≤T≤500
+1
+≤
+N
+≤
+2000
+1≤N≤2000
+A
+i
+,
+B
+i
+∈
+{
+0
+,
+1
+}
+A 
+i
+​
+ ,B 
+i
+​
+ ∈{0,1}
+∣
+A
+∣
+=
+∣
+B
+∣
+=
+N
+∣A∣=∣B∣=N
+The sum of 
+N
+N does not exceed 
+2000
+2000 over all test cases.
+Sample 1:
+Input
+Output
+3
+4
+1110
+1010
+2
+10
+01
+1
+0
+0
+2
+1 2 4
+2 3 4
+1
+2 1 2
+0
+Explanation:
+Test Case 1 : Initially, 
+A
+=
+1110
+A=1110. We first flip the range 
+[
+2
+,
+4
+]
+[2,4] to get 
+1001
+1001. Then we reverse the range 
+[
+3
+,
+4
+]
+[3,4] to get 
+1010
+1010. Now, 
+A
+=
+B
+A=B and we used 
+2
+2 operations (which is exactly how many we were allowed).
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n;
+        cin >> n;
+        string a, b;
+        cin >> a >> b;
+        if (a == b) {
+            cout << 0 << endl;
+            continue;
+        }
+        int j = 0;
+        vector <tuple <int, int, int> > ops;
+        for (int i = 0; i < n; i++) {
+            if (a[i] != b[i]) {
+                j = i;
+                while (j < n && a[j] != b[j]) j++;
+                ops.push_back({1, i+1, j});
+                for (int k = i; k < j; k++) {
+                    a[k] = (a[k] == '1') ? '0' : '1';
+                }
+                i = j - 1;
+            }
+        }
+        if (a != b) {
+            ops.push_back({2, 1, n});
+            reverse(a.begin(), a.end());
+        }
+        cout << ops.size() << endl;
+        for (auto it : ops) {
+            int type, L, R;
+            tie(type, L, R) = it;
+            cout << type << " " << L << " " << R << endl;
+        }
+    }
+}
