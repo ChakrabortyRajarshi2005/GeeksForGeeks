@@ -1,0 +1,471 @@
+Ordered Distances
+Chef had a sequence of 
+N
+N distinct points 
+X
+1
+,
+X
+2
+,
+.
+.
+.
+,
+X
+N
+X 
+1
+​
+ ,X 
+2
+​
+ ,...,X 
+N
+​
+ .
+
+Chef did the following action to get a new sequence of points 
+Y
+Y:
+
+Choose a pivot index 
+i
+i (
+1
+≤
+i
+≤
+N
+1≤i≤N), and thus a pivot value 
+P
+=
+X
+i
+P=X 
+i
+​
+ .
+Make a list 
+L
+L of the 
+N
+N pairs 
+(
+∣
+X
+j
+−
+P
+∣
+,
+X
+j
+)
+(∣X 
+j
+​
+ −P∣,X 
+j
+​
+ ) for each 
+1
+≤
+j
+≤
+N
+1≤j≤N, i.e. pair of (distance, value).
+Sort the list 
+L
+L in increasing order
+†
+†
+ .
+Define 
+Y
+k
+Y 
+k
+​
+  as the second element in the 
+k
+k-th pair in this sorted list 
+L
+L.
+For example,
+
+Suppose we start with 
+X
+=
+[
+2
+,
+6
+,
+5
+,
+4
+]
+X=[2,6,5,4], pivot index 
+i
+=
+3
+i=3 and thus, 
+P
+=
+X
+3
+=
+5
+P=X 
+3
+​
+ =5.
+List 
+L
+L = 
+[
+(
+3
+,
+2
+)
+,
+(
+1
+,
+6
+)
+,
+(
+0
+,
+5
+)
+,
+(
+1
+,
+4
+)
+]
+[(3,2),(1,6),(0,5),(1,4)]
+Sorted order of List 
+L
+L = 
+[
+(
+0
+,
+5
+)
+,
+(
+1
+,
+4
+)
+,
+(
+1
+,
+6
+)
+,
+(
+3
+,
+2
+)
+]
+[(0,5),(1,4),(1,6),(3,2)]
+Y
+=
+[
+5
+,
+4
+,
+6
+,
+2
+]
+Y=[5,4,6,2] taking the second elements from the list.
+Now, you are given the sequences 
+X
+X and 
+Y
+Y but you do not know the pivot index chosen by Chef. Can you recover any valid pivot index, or declare an inconsistency in the results. (i.e. no valid pivot index exists)
+
+It is guaranteed the input values of the array 
+X
+X and 
+Y
+Y are all distinct, and that 
+X
+X is a permutation of 
+Y
+Y.
+
+†
+†
+  Increasing order of pairs is defined as 
+(
+A
+,
+B
+)
+<
+(
+C
+,
+D
+)
+(A,B)<(C,D) if and only if either of the 
+2
+2 conditions hold:
+
+A
+<
+C
+A<C
+A
+=
+C
+,
+B
+<
+D
+A=C,B<D
+Input Format
+The first line of input will contain a single integer 
+T
+T, denoting the number of test cases.
+Each test case consists of multiple lines of input.
+The first line of each test case contains 
+N
+N - the number of points.
+The second line contains 
+N
+N integers - 
+X
+1
+,
+X
+2
+,
+.
+.
+.
+,
+X
+N
+X 
+1
+​
+ ,X 
+2
+​
+ ,...,X 
+N
+​
+ , the initial sequence of distinct points.
+The third line contains 
+N
+N integers - 
+Y
+1
+,
+Y
+2
+,
+.
+.
+.
+,
+Y
+N
+Y 
+1
+​
+ ,Y 
+2
+​
+ ,...,Y 
+N
+​
+ , the final sequence of distinct points.
+Output Format
+For each test case, output either the pivot index 
+i
+i (
+1
+≤
+i
+≤
+N
+1≤i≤N) if it exists or 
+−
+1
+−1 to indicate no valid pivot.
+
+If multiple answers are possible, all will be accepted.
+
+Constraints
+1
+≤
+T
+≤
+100
+1≤T≤100
+2
+≤
+N
+≤
+100
+2≤N≤100
+1
+≤
+X
+i
+,
+Y
+i
+≤
+1000
+1≤X 
+i
+​
+ ,Y 
+i
+​
+ ≤1000
+X
+i
+≠
+X
+j
+X 
+i
+​
+ =X 
+j
+​
+  for all 
+i
+≠
+j
+i=j
+Y
+i
+≠
+Y
+j
+Y 
+i
+​
+ =Y 
+j
+​
+  for all 
+i
+≠
+j
+i=j
+X
+X is a permutation of 
+Y
+Y
+Sample 1:
+Input
+Output
+4
+4
+2 6 5 4
+5 4 6 2
+4
+2 6 5 4
+5 6 4 2
+3
+2 3 1
+3 2 1
+3
+1 2 3
+3 1 2
+3
+-1
+2
+-1
+Explanation:
+Test Case 1 : As already discussed in the statement, we can choose pivot index 
+i
+=
+3
+i=3.
+
+Test Case 2 : The given order in 
+Y
+Y is incorrect, as 
+6
+6 was placed before 
+4
+4 if we choose pivot index 
+i
+=
+3
+i=3 for example.
+
+Did you like the problem statement?
+import java.util.*;
+import java.lang.*;
+import java.io.*;
+
+class Codechef
+{
+	public static void main (String[] args) throws java.lang.Exception
+	{
+		// your code goes here
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt();
+        while(t -- > 0){
+            int n = sc.nextInt();
+            int firstarr[] = new int[n];
+            for(int i = 0; i < n; i ++){
+                firstarr[i] = sc.nextInt();
+            }
+            int secondarr[] = new int[n];
+            for(int i = 0; i < n; i++){
+                secondarr[i] = sc.nextInt();
+            }
+            
+            int valid = -1;
+            for (int i = 0; i < n; i++) {
+                int pivot = firstarr[i];
+
+                PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> {
+                    if (a[0] != b[0]) return a[0] - b[0]; 
+                    return a[1] - b[1]; 
+                });
+
+                for (int j = 0; j < n; j++) {
+                    pq.add(new int[]{Math.abs(pivot - firstarr[j]), firstarr[j]});
+                }
+
+                boolean isValid = true;
+                for (int j = 0; j < n; j++) {
+                    int[] element = pq.poll();
+                    if (element[1] != secondarr[j]) {
+                        isValid = false;
+                        break;
+                    }
+                }
+
+                if (isValid) {
+                    valid = i + 1; 
+                    break;
+                }
+            }
+            System.out.println(valid);
+        }
+	}
+}
