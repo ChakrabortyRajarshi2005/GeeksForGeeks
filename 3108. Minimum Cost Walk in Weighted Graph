@@ -1,0 +1,151 @@
+3108. Minimum Cost Walk in Weighted Graph
+DescriptionHintsSubmissionsDiscussSolutions
+There is an undirected weighted graph with n vertices labeled from 0 to n - 1.
+
+You are given the integer n and an array edges, where edges[i] = [ui, vi, wi] indicates that there is an edge between vertices ui and vi with a weight of wi.
+
+A walk on a graph is a sequence of vertices and edges. The walk starts and ends with a vertex, and each edge connects the vertex that comes before it and the vertex that comes after it. It's important to note that a walk may visit the same edge or vertex more than once.
+
+The cost of a walk starting at node u and ending at node v is defined as the bitwise AND of the weights of the edges traversed during the walk. In other words, if the sequence of edge weights encountered during the walk is w0, w1, w2, ..., wk, then the cost is calculated as w0 & w1 & w2 & ... & wk, where & denotes the bitwise AND operator.
+
+You are also given a 2D array query, where query[i] = [si, ti]. For each query, you need to find the minimum cost of the walk starting at vertex si and ending at vertex ti. If there exists no such walk, the answer is -1.
+
+Return the array answer, where answer[i] denotes the minimum cost of a walk for query i.
+
+ 
+
+Example 1:
+
+Input: n = 5, edges = [[0,1,7],[1,3,7],[1,2,1]], query = [[0,3],[3,4]]
+
+Output: [1,-1]
+
+Explanation:
+
+
+To achieve the cost of 1 in the first query, we need to move on the following edges: 0->1 (weight 7), 1->2 (weight 1), 2->1 (weight 1), 1->3 (weight 7).
+
+In the second query, there is no walk between nodes 3 and 4, so the answer is -1.
+
+Example 2:
+
+Input: n = 3, edges = [[0,2,7],[0,1,15],[1,2,6],[1,2,1]], query = [[1,2]]
+
+Output: [0]
+
+Explanation:
+
+
+To achieve the cost of 0 in the first query, we need to move on the following edges: 1->2 (weight 1), 2->1 (weight 6), 1->2 (weight 1).
+
+ 
+
+Constraints:
+
+2 <= n <= 105
+0 <= edges.length <= 105
+edges[i].length == 3
+0 <= ui, vi <= n - 1
+ui != vi
+0 <= wi <= 105
+1 <= query.length <= 105
+query[i].length == 2
+0 <= si, ti <= n - 1
+si != ti
+class Solution {
+
+    public int[] minimumCost(int n, int[][] edges, int[][] queries) {
+        // Create the adjacency list of the graph
+        List<List<int[]>> adjList = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            adjList.add(new ArrayList<>(2));
+        }
+        for (int[] edge : edges) {
+            adjList.get(edge[0]).add(new int[] { edge[1], edge[2] });
+            adjList.get(edge[1]).add(new int[] { edge[0], edge[2] });
+        }
+
+        boolean[] visited = new boolean[n];
+
+        // Array to store the component ID of each node
+        int[] components = new int[n];
+        List<Integer> componentCost = new ArrayList<>(n);
+
+        int componentId = 0;
+
+        // Perform DFS for each unvisited node to identify components and calculate their costs
+        for (int node = 0; node < n; node++) {
+            // If the node hasn't been visited, it's a new component
+            if (!visited[node]) {
+                // Get the component cost and mark all nodes in the component
+                componentCost.add(
+                    getComponentCost(
+                        node,
+                        adjList,
+                        visited,
+                        components,
+                        componentId
+                    )
+                );
+                // Increment the component ID for the next component
+                componentId++;
+            }
+        }
+
+        int[] answer = new int[queries.length];
+        for (int i = 0; i < queries.length; i++) {
+            int start = queries[i][0];
+            int end = queries[i][1];
+
+            if (components[start] == components[end]) {
+                // If they are in the same component, return the precomputed cost for the component
+                answer[i] = componentCost.get(components[start]);
+            } else {
+                // If they are in different components, return -1
+                answer[i] = -1;
+            }
+        }
+
+        return answer;
+    }
+
+    // Helper function to calculate the cost of a component using BFS
+    private int getComponentCost(
+        int node,
+        List<List<int[]>> adjList,
+        boolean[] visited,
+        int[] components,
+        int componentId
+    ) {
+        // Initialize the cost to the number that has only 1s in its
+        // binary representation
+        int currentCost = Integer.MAX_VALUE;
+
+        // Mark the node as part of the current component
+        components[node] = componentId;
+        visited[node] = true;
+
+        // Explore all neighbors of the current node
+        for (int[] neighbor : adjList.get(node)) {
+            int weight = neighbor[1];
+
+            // Update the cost by performing a bitwise AND of the edge
+            // weights
+            currentCost &= weight;
+
+            if (!visited[neighbor[0]]) {
+                // Recursively calculate the cost of the rest of the component
+                // and accumulate it into currentCost
+                currentCost &= getComponentCost(
+                    neighbor[0],
+                    adjList,
+                    visited,
+                    components,
+                    componentId
+                );
+            }
+        }
+
+        return currentCost;
+    }
+}
