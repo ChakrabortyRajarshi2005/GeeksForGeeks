@@ -1,0 +1,46 @@
+Codeforces 23rd march
+import java.util.*;
+
+public class InterestingDrink {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Read number of shops
+        int n = sc.nextInt();
+        int[] prices = new int[n];
+        
+        // Read shop prices
+        for (int i = 0; i < n; i++) {
+            prices[i] = sc.nextInt();
+        }
+        
+        // Sort prices for binary search
+        Arrays.sort(prices);
+        
+        // Read number of queries
+        int q = sc.nextInt();
+        
+        // Process each query
+        while (q-- > 0) {
+            int mi = sc.nextInt();
+            // Use binary search to find the number of affordable shops
+            int count = upperBound(prices, mi);
+            System.out.println(count);
+        }
+        
+        sc.close();
+    }
+
+    // Custom upper bound implementation
+    private static int upperBound(int[] arr, int key) {
+        int low = 0, high = arr.length;
+        while (low < high) {
+            int mid = (low + high) / 2;
+            if (arr[mid] <= key)
+                low = mid + 1;
+            else
+                high = mid;
+        }
+        return low;
+    }
+}
