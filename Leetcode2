@@ -1,0 +1,26 @@
+import java.util.Scanner;
+
+public class CheapTravel {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        
+        // Read input
+        int n = sc.nextInt();  // number of rides needed
+        int m = sc.nextInt();  // rides per special ticket
+        int a = sc.nextInt();  // cost of single ticket
+        int b = sc.nextInt();  // cost of m-ride ticket
+        
+        // Calculate minimum cost
+        long minCost = (long)n * a;  // cost if buying all single tickets
+        
+        // Try different combinations of m-ride tickets
+        for (int mTickets = 0; mTickets <= (n + m - 1) / m; mTickets++) {
+            int remainingRides = Math.max(0, n - mTickets * m);
+            long currentCost = (long)mTickets * b + (long)remainingRides * a;
+            minCost = Math.min(minCost, currentCost);
+        }
+        
+        System.out.println(minCost);
+        sc.close();
+    }
+}
