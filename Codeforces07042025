@@ -1,0 +1,44 @@
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int t = sc.nextInt(); // number of test cases
+        
+        while (t-- > 0) {
+            long x = sc.nextLong(); // first number
+            long y = sc.nextLong(); // second number
+            long a = sc.nextLong(); // cost of first operation
+            long b = sc.nextLong(); // cost of second operation
+            
+            // Calculate minimum cost
+            long ans = solve(x, y, a, b);
+            System.out.println(ans);
+        }
+    }
+    
+    public static long solve(long x, long y, long a, long b) {
+        // If both are already 0, no cost needed
+        if (x == 0 && y == 0) return 0;
+        
+        // Make x <= y for simplicity
+        if (x > y) {
+            long temp = x;
+            x = y;
+            y = temp;
+        }
+        
+        // Two approaches:
+        // 1. Use only operation 1: cost = (x + y) * a
+        // 2. Use operation 2 to reduce both until x becomes 0, then use operation 1 for remaining y
+        long cost1 = (x + y) * a; // using only first operation
+        
+        // For second approach:
+        // Use operation 2 to reduce both by x
+        // Then use operation 1 to reduce remaining (y-x) to 0
+        long cost2 = x * b + (y - x) * a;
+        
+        // Return minimum of the two approaches
+        return Math.min(cost1, cost2);
+    }
+}
