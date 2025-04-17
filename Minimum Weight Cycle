@@ -1,0 +1,80 @@
+Minimum Weight Cycle
+Difficulty: HardAccuracy: 69.2%Submissions: 7K+Points: 8
+Given an undirected, weighted graph with V vertices numbered from 0 to V-1 and E edges, represented by a 2d array edges[][], where edges[i] = [u, v, w] represents the edge between the nodes u and v having w edge weight.
+Your task is to find the minimum weight cycle in this graph.
+
+Examples:
+
+Input: V = 5, edges[][] = [[0, 1, 2], [1, 2, 2], [1, 3, 1], [1, 4, 1], [0, 4, 3], [2, 3, 4]]
+
+Output: 6
+Explanation: 
+
+Minimum-weighted cycle is  0 → 1 → 4 → 0 with a total weight of 6(2 + 1 + 3)
+Input: V = 5, edges[][] = [[0, 1, 3], [1, 2, 2], [0, 4, 1], [1, 4, 2], [1, 3, 1], [3, 4, 2], [2, 3, 3]]
+
+Output: 5
+Explanation: 
+
+Minimum-weighted cycle is  1 → 3 → 4 → 1 with a total weight of 5(1 + 2 + 2)
+Constraints:
+1 ≤ V ≤ 100
+1 ≤ E = edges.size() ≤ 103 
+1 ≤ edges[i][j] ≤ 100
+
+class Solution {
+  public:
+    int findMinCycle(int V, vector<vector<int>>& edges) {
+        // code here
+        int res = INT_MAX;
+        
+        
+        vector<vector<pair<int,int>>> adj(V);
+        for(auto& edge:edges){
+            int v=edge[0];
+            int u=edge[1];
+            int wt=edge[2];
+            adj[v].push_back({u,wt});
+            adj[u].push_back({v,wt});
+        }
+        
+                for(auto& edge : edges){
+            
+            int src = edge[0], des = edge[1], weight = edge[2];
+            vector<int> dist(V,INT_MAX);
+            dist[src] = 0;
+            
+            priority_queue<pair<int,int>, vector<pair<int,int>>, greater<>> pq;
+            pq.push({src,0});
+            
+            while(pq.size() != 0){
+                
+                int cur = pq.top().first;
+                int curWt = pq.top().second;
+                pq.pop();
+                
+                for(auto x : adj[cur]){
+                    
+                    int childs = x.first;
+                    
+                   
+                    if((cur == src && childs == des) || (cur == des && childs == src) ) continue;
+                    
+                    int wts = x.second;
+                    
+                    if(dist[cur] + wts < dist[childs]){
+                        dist[childs] = dist[cur]+wts;
+                        pq.push({childs,dist[childs]});
+                    }
+                }
+            }
+            
+            if( dist[des] != INT_MAX){
+                res = min(res, weight + dist[des]);
+            }
+            
+        }
+        
+        return res;
+    }
+};
