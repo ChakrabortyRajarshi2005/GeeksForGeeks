@@ -1,0 +1,96 @@
+Implement Trie
+Difficulty: MediumAccuracy: 65.68%Submissions: 70K+Points: 4Average Time: 30m
+Implement Trie class and complete insert(), search() and isPrefix() function for the following queries :
+
+Type 1 : (1, word), calls insert(word) function and insert word in the Trie
+Type 2 : (2, word), calls search(word) function and check whether word exists in Trie or not.
+Type 3 : (3, word), calls isPrefix(word) function and check whether word exists as a prefix of any string in Trie or not.
+Examples :
+
+Input: query[][] = [[1, "abcd"], [1, "abc"], [1, "bcd"], [2, "bc"], [3, "bc"], [2, "abc"]]
+Output: [false, true, true]
+Explanation: string "bc" does not exist in the trie, "bc" exists as prefix of the word "bcd" in the trie, and "abc" also exists in the trie.
+Input: query[][] = [[1, "gfg"], [1, "geeks"], [3, "fg"], [3, "geek"], [2, "for"]]
+Output: [false, true, false]
+Explanation: The string "for" is not present in the trie, "fg" is not a valid prefix, while "geek" is a valid prefix of the word "geeks" in the trie.
+Constraints:
+1 ≤ query.size() ≤ 104
+1 ≤ word.size() ≤ 103
+
+
+// User function template for C++
+class Node {
+public:
+    Node* children[26];
+    bool isLeaf;
+
+    Node() {
+        isLeaf = false;
+        for (int i = 0; i < 26; i++) {
+            children[i] = NULL;
+        }
+    }
+};
+
+class Trie {
+  public:
+    Node* root = new Node();
+    Trie() {
+        
+    }
+
+    void insert(string &word) {
+        int n = word.size();
+
+        Node* curr = root;
+        for (int i = 0; i < n; i++){
+            if (i == n - 1){ // if last word
+                if (curr -> children[word[i] - 'a'] != NULL){
+                    curr = curr -> children[word[i] - 'a'];
+                }
+                else{
+                    Node* node = new Node();
+                    curr -> children[word[i] - 'a'] = node;
+                    curr = node;
+                }
+                curr -> isLeaf = true;
+            }
+            else{
+                if (curr -> children[word[i] - 'a'] != NULL){
+                    curr = curr -> children[word[i] - 'a'];
+                }
+                else{
+                    Node* node = new Node();
+                    curr -> children[word[i] - 'a'] = node;
+                    curr = node;
+                }
+            }
+        }
+    }
+
+    bool search(string &word) {
+        Node* curr = root;
+        int n = word.size();
+        for (int i = 0; i < n; i++){
+            if (curr -> children[word[i] - 'a'] == NULL){
+                return false;
+            }
+            curr = curr -> children[word[i] - 'a'];
+        }
+        
+        return curr -> isLeaf;
+    }
+
+    bool isPrefix(string &word) {
+        Node* curr = root;
+        int n = word.size();
+        for (int i = 0; i < n; i++){
+            if (curr -> children[word[i] - 'a'] == NULL){
+                return false;
+            }
+            curr = curr -> children[word[i] - 'a'];
+        }
+        
+        return true;
+    }
+};
