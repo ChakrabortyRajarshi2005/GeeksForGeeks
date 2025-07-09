@@ -1,0 +1,52 @@
+Sum of subarray minimum
+Difficulty: MediumAccuracy: 46.92%Submissions: 20K+Points: 4Average Time: 30m
+Given an array arr[] of positive integers, find the total sum of the minimum elements of every possible subarrays.
+
+Note: It is guaranteed that the total sum will fit within a 32-bit unsigned integer.
+
+Examples:
+
+Input: arr[] = [3, 1, 2, 4]
+Output: 17
+Explanation: Subarrays are [3], [1], [2], [4], [3, 1], [1, 2], [2, 4], [3, 1, 2], [1, 2, 4], [3, 1, 2, 4]. Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1. Sum of all these is 17.
+Input: arr[] = [71, 55, 82, 55]
+Output: 593
+Explanation: The sum of the minimum of all the subarrays is 593.
+Constraints:
+1 ≤ arr.size() ≤ 3*104
+1 ≤ arr[i] ≤ 103
+class Solution {
+  public:
+    int sumSubMins(vector<int>& arr) {
+        int n = arr.size();
+        vector<int> dp(n, 0);
+        vector<int> right(n);
+        vector<int> stack;
+
+        // Initialize right[] to self indices
+        for (int i = 0; i < n; i++)
+            right[i] = i;
+
+        // Find index of next
+        // smaller element on the right
+        for (int i = 0; i < n; i++) {
+            while (!stack.empty() && arr[i] < arr[stack.back()]) {
+                right[stack.back()] = i;
+                stack.pop_back();
+            }
+            stack.push_back(i);
+        }
+
+        // Fill dp[] from right to left
+        dp[n - 1] = arr[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            int r = right[i];
+            if (r == i) {
+                dp[i] = (n - i) * arr[i];
+            } else {
+                dp[i] = (r - i) * arr[i] + dp[r];
+            }
+        }
+        return accumulate(dp.begin(), dp.end(), 0);
+    }
+};
